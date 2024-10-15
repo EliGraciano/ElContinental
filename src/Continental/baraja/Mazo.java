@@ -21,8 +21,6 @@ public class Mazo {
         return cont;
     }
 
-    private
-
     public ArrayList<Carta> getCartas(){
         //devuelve la lista de cartas(mazo)
         return this.cartas;
