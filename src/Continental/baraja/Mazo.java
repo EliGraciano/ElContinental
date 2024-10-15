@@ -1,6 +1,7 @@
 package Continental.baraja;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class Mazo {
@@ -20,6 +21,8 @@ public class Mazo {
         return cont;
     }
 
+    private
+
     public ArrayList<Carta> getCartas(){
         //devuelve la lista de cartas(mazo)
         return this.cartas;
@@ -34,6 +37,11 @@ public class Mazo {
         }
     }
 
+    public void mezclar(){
+        //como el nombre dicce,mezcla las cartas
+        Collections.shuffle(this.cartas);
+    }
+
     public Carta pedir(){
         //genero un valor random entre 1 y el tamanio del mazo y saco esa carta
         Random random = new Random();
@@ -42,5 +50,7 @@ public class Mazo {
         this.cartas.remove(indiceCarta);
         return cartapedida;
     }
+
+
 
 }
