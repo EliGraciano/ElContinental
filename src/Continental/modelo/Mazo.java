@@ -28,9 +28,15 @@ public class Mazo {
 
     private void generarCartas(ArrayList<Carta> mazo){
         // genero todas las cartas que va a tener el mazo
+        int cont = 0;
         for (Palo palo : Palo.values()){
-            for(int i = 1; i < 13; i++){
-                this.cartas.add(new Carta(i,palo));
+            for(int i = 1; i < 15; i++){
+                if (cont < 2) {
+                    this.cartas.add(new Carta(i, palo));
+                }
+                if (i == 14){
+                    cont++;
+                }
             }
         }
     }
