@@ -1,6 +1,4 @@
-package Continental.partida;
-
-import Continental.baraja.Carta;
+package Continental.modelo;
 
 import java.util.ArrayList;
 import java.util.Random;

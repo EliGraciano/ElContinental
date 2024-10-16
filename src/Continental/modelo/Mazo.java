@@ -1,4 +1,4 @@
-package Continental.baraja;
+package Continental.modelo;
 
 import java.util.ArrayList;
 import java.util.Collections;

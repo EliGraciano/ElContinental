@@ -1,4 +1,4 @@
-package Continental.baraja;
+package Continental.modelo;
 
 public class Carta {
     private int valor;
