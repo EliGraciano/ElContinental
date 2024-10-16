@@ -6,14 +6,14 @@ import java.util.Random;
 
 public class Mazo {
     private ArrayList<Carta> cartas;
-
+//herencia conjunto de cartas? (para hacer pozo, mazo, mano del jugador)
     public Mazo() {
         this.cartas = new ArrayList<>();
         generarCartas(this.cartas);
     }
 
     public int getSize(){
-        //devuelvo e tamanio del mazo
+        //devuelvo el tamanio del mazo
         int cont = 0;
         for (int i = 0; i < cartas.size(); i++){
             cont++;
