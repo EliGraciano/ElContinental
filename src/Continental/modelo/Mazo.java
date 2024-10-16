@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class Mazo {
+public class Mazo extends ConjuntoDeCartas{
     private ArrayList<Carta> cartas;
 //herencia conjunto de cartas? (para hacer pozo, mazo, mano del jugador)
     public Mazo() {

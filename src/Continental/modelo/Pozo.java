@@ -3,7 +3,7 @@ package Continental.modelo;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Pozo {
+public class Pozo extends ConjuntoDeCartas{
     private ArrayList<Carta> cartas;
 
     public Pozo() {
