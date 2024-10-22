@@ -36,4 +36,8 @@ public class Pozo {
         return cartarobada;
     }
 
+    public void agregar(Carta carta){
+        this.cartas.add(carta);
+    }
+
 }
