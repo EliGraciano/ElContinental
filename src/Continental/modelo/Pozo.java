@@ -11,7 +11,7 @@ public class Pozo extends ConjuntoDeCartas{
     }
 
     public int getSize(){
-        //devuelvo e tamanio del mazo
+        //devuelvo e tamanio del pozo
         int cont = 0;
         for (int i = 0; i < cartas.size(); i++){
             cont++;
@@ -20,12 +20,12 @@ public class Pozo extends ConjuntoDeCartas{
     }
 
     public ArrayList<Carta> getCartas(){
-        //devuelve la lista de cartas(mazo)
+        //devuelve la lista de cartas(pozo)
         return this.cartas;
     }
 
     public Carta robar(){
-        //genero un valor random entre 1 y el tamanio del mazo y saco esa carta
+        //robo la primera carta
         if (this.getSize() == 0){
             return null;
         }
