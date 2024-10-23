@@ -13,15 +13,33 @@ public class Jugador {
         this.mano = new Mano();
     }
 
-    public void tirar(int pos){
-        mano.tirar(pos);
+    public String getNombre() {
+        //devuelve el nombre del jugador
+        return this.nombre;
     }
 
-    public void robar(Carta carta){
-        mano.agregar(carta);
+    public ArrayList getMano(){
+        // devuelve las cartas de la mano
+        return this.mano.getCartas();
     }
 
-    
+    public void descartar(int pos,Pozo pozo){
+        // tira al pozo que se le pasa la carta elegida
+        Carta cartaDescarte = this.mano.descartar(pos);
+        pozo.agregar(cartaDescarte);
+    }
+
+    public void robar(Mazo mazo){
+        //roba una carta del mazo y la agrega a la mano
+        Carta carta = mazo.robar();
+        this.mano.agregar(carta);
+    }
+
+    public void ordenarMano(){
+        this.mano.ordenar();
+    }
+
+
 
 
 }

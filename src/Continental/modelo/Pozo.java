@@ -11,7 +11,7 @@ public class Pozo extends ConjuntoDeCartas{
     }
 
     public int getSize(){
-        //devuelvo e tamanio del pozo
+        //devuelvo el tamanio del pozo
         int cont = 0;
         for (int i = 0; i < cartas.size(); i++){
             cont++;
@@ -29,11 +29,14 @@ public class Pozo extends ConjuntoDeCartas{
         if (this.getSize() == 0){
             return null;
         }
-        Random random = new Random();
-        int indiceCarta = random.nextInt(this.getSize());
-        Carta cartarobada = this.cartas.get(indiceCarta);
-        this.cartas.remove(indiceCarta);
+        int ultimacarta = this.getSize();
+        Carta cartarobada = this.cartas.get(ultimacarta);
+        this.cartas.remove(ultimacarta);
         return cartarobada;
+    }
+
+    public void agregar(Carta carta){
+        this.cartas.add(carta);
     }
 
 }
