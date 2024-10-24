@@ -1,5 +1,7 @@
 package Continental.modelo;
 
+import java.util.Objects;
+
 public class Carta {
     private int valor;
     private Palo palo;
@@ -20,5 +22,19 @@ public class Carta {
     @Override
     public String toString() {
         return "Carta{" +valor + " de " + palo + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        // equals para comparar con otras cartas
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Carta carta = (Carta) o;
+        return valor == carta.valor && palo == carta.palo;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(valor, palo);
     }
 }

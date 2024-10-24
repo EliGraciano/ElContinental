@@ -35,7 +35,13 @@ public class Jugador {
         this.mano.agregar(carta);
     }
 
+    public void bajarCartas(ArrayList<Carta> cartas){
+        // TODO esto me esta devolviendo un array de cartas que puedo utilizar
+        this.mano.bajarCartas(cartas);
+    }
+
     public void ordenarMano(){
+        // mecanismo de ordenamiento por valor de carta
         this.mano.ordenar();
     }
 
