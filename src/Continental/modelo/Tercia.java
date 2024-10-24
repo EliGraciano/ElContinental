@@ -12,7 +12,7 @@ public class Tercia implements ICombinacion{
         // pongo todos los palos en un array, y por cada carta sumo 1 al palo en dicho array, y al salir ninguno tiene que tener mas de 1,sino hay 2 cartas de un mismo palo
         if (cartas.size() != 3) {return false;}
         int valorCartas = cartas.getFirst().getValor();
-        int[] contadorPalos = new int[Palo.values().length];
+        int[] contadorPalos = new int[Palo.values().length]; // creo un arreglo de ints con el tamaño de los palos posibles
         for (Carta carta : cartas){
             if(valorCartas != carta.getValor()){
                 return false;
