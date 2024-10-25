@@ -25,7 +25,7 @@ public class Mano extends ConjuntoDeCartas {
     public ArrayList bajarCartas(ArrayList<Carta> cartas){
         // devuelvo el conjunto de cartas a bajar y las saco de la mano
         // TODO cambiar por una excepcion el if
-        if (combinaciones.get(0).esValida(cartas) || combinaciones.get(1).esValida(cartas)) {
+        if (combinacionValida(cartas)) {
             ArrayList<Carta> cartasBajadas = new ArrayList<>();
             for (Carta carta : cartas) {
                 cartasBajadas.add(carta);
@@ -39,5 +39,15 @@ public class Mano extends ConjuntoDeCartas {
     public void ordenar() {
         // se ordenan por su valor
         this.cartas.sort(Comparator.comparingInt(Carta::getValor));
+    }
+
+    private boolean combinacionValida(ArrayList<Carta> cartas){
+        // me fijo si las cartas que me pasan forman una combinacion(en base a la lista de combinaciones que tengo para fijarme
+        // (ya que si el dia de mañana quiero agrgar una nueva combinacion solo tengo que agregar y sigue escalando dicho codigo))
+        boolean resultado = false;
+        for (ICombinacion combinacion : combinaciones){
+            resultado = combinacion.esValida(cartas);
+        }
+        return resultado;
     }
 }
