@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Jugador {
 
-    private String nombre;
+    private final String nombre;
 
     private Mano mano;
 
@@ -18,7 +18,7 @@ public class Jugador {
         return this.nombre;
     }
 
-    public ArrayList getMano(){
+    public ArrayList<Carta> getMano(){
         // devuelve las cartas de la mano
         return this.mano.getCartas();
     }

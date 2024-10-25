@@ -22,7 +22,7 @@ public class Mano extends ConjuntoDeCartas {
         this.cartas.add(carta);
     }
 
-    public ArrayList bajarCartas(ArrayList<Carta> cartas){
+    public ArrayList<Carta> bajarCartas(ArrayList<Carta> cartas){
         // devuelvo el conjunto de cartas a bajar y las saco de la mano
         // TODO cambiar por una excepcion el if
         if (combinacionValida(cartas)) {
