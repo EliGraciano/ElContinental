@@ -5,40 +5,23 @@ import java.util.Collections;
 import java.util.Random;
 
 public class Mazo extends ConjuntoDeCartas{
-    private ArrayList<Carta> cartas;
 //herencia conjunto de cartas? (para hacer pozo, mazo, mano del jugador)
     public Mazo() {
         this.cartas = new ArrayList<>();
         generarCartas(this.cartas);
     }
 
-    public int getSize(){
-        //devuelvo el tamanio del mazo
-        int cont = 0;
-        for (int i = 0; i < cartas.size(); i++){
-            cont++;
-        }
-        return cont;
-    }
-
-    public ArrayList<Carta> getCartas(){
-        //devuelve la lista de cartas(mazo)
-        return this.cartas;
-    }
-
     private void generarCartas(ArrayList<Carta> mazo){
         // genero todas las cartas que va a tener el mazo
-        int cont = 0;
         for (Palo palo : Palo.values()){
-            for(int i = 1; i < 15; i++){
-                if (cont < 2) {
+            if (palo != Palo.MONO) {
+                for (int i = 1; i < 14; i++) {
                     this.cartas.add(new Carta(i, palo));
-                }
-                if (i == 14){
-                    cont++;
                 }
             }
         }
+        this.cartas.add(new Carta(50,Palo.MONO));
+        this.cartas.add(new Carta(50,Palo.MONO));
     }
 
     public void mezclar(){

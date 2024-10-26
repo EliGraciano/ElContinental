@@ -10,20 +10,6 @@ public class Pozo extends ConjuntoDeCartas{
         this.cartas = new ArrayList<>();
     }
 
-    public int getSize(){
-        //devuelvo el tamanio del pozo
-        int cont = 0;
-        for (int i = 0; i < cartas.size(); i++){
-            cont++;
-        }
-        return cont;
-    }
-
-    public ArrayList<Carta> getCartas(){
-        //devuelve la lista de cartas(pozo)
-        return this.cartas;
-    }
-
     public Carta robar(){
         //robo la primera carta
         if (this.getSize() == 0){

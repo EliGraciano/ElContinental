@@ -37,4 +37,5 @@ public class Carta {
     public int hashCode() {
         return Objects.hash(valor, palo);
     }
+    
 }
