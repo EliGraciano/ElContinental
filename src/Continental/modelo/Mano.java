@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Mano extends ConjuntoDeCartas {
+    // TODO sacar interfaz combinacion, y crear una clase validador
     private ArrayList<ICombinacion> combinaciones;
 
     public Mano() {
