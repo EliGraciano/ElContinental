@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Jugador {
 //TODO clase Juego o Mesa son lo mismo, voy a tener una herencia de rondas
-// (cada ronda va aser distinta y me sirve pasarle el validador como parametro en base a las reglas de cada ronda)
+// (cada ronda va a ser distinta y me sirve pasarle el validador como parametro en base a las reglas de cada ronda)
     private final String nombre;
 
     private Mano mano;

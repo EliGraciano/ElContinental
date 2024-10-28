@@ -1,22 +1,24 @@
 package Continental.modelo;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
-public class Tercia implements ICombinacion{
+public class Tercia extends ConjuntoDeCartas{
 
-    @Override
-    public boolean esValida(ArrayList<Carta> cartas) {
-        // me fijo que todas las cartas sean del mismo numero, ya que no importa si hay palos repetidos, o Monos(puede ser una tercia de monos)
-        if (cartas.size() < 3) {return false;} // si tiene 3 o mas funciona
-        int valorCartas = cartas.getFirst().getValor();
-        for (Carta carta : cartas){
-            if(valorCartas != carta.getValor()){
-                return false;
-            }
-        }
-        return true;
+    public Tercia(ArrayList<Carta> cartas) {
+        this.cartas = cartas;
     }
+
+    // sobre carga para poder acomodar una carta en un juego dado
+    public void acomodar(Carta carta){
+        this.cartas.add(carta);
+    }
+    // sobre carga para poder acomodar un conjunto de cartas en un juego dado
+
+    public void acomodar(ArrayList<Carta> cartas){
+        for (Carta carta : cartas) {
+            this.cartas.add(carta);
+        }
+    }
+
     
 }

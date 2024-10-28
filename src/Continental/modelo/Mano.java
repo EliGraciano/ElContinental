@@ -1,15 +1,11 @@
 package Continental.modelo;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Mano extends ConjuntoDeCartas {
-    // TODO sacar interfaz combinacion, y crear una clase validador
-    private ArrayList<ICombinacion> combinaciones;
 
     public Mano() {
-        //TODO como manejo la creacion de la lista de combinaciones?
         this.cartas = new ArrayList<>();
     }
 
@@ -26,7 +22,7 @@ public class Mano extends ConjuntoDeCartas {
     public ArrayList<Carta> bajarCartas(ArrayList<Carta> cartas){
         // devuelvo el conjunto de cartas a bajar y las saco de la mano
         // TODO cambiar por una excepcion el if
-        if (combinacionValida(cartas)) {
+        if (combinacionValida(cartas) != null) {
             ArrayList<Carta> cartasBajadas = new ArrayList<>();
             for (Carta carta : cartas) {
                 cartasBajadas.add(carta);
@@ -42,13 +38,18 @@ public class Mano extends ConjuntoDeCartas {
         this.cartas.sort(Comparator.comparingInt(Carta::getValor));
     }
 
-    private boolean combinacionValida(ArrayList<Carta> cartas){
-        // me fijo si las cartas que me pasan forman una combinacion(en base a la lista de combinaciones que tengo para fijarme
-        // (ya que si el dia de mañana quiero agrgar una nueva combinacion solo tengo que agregar y sigue escalando dicho codigo))
-        boolean resultado = false;
-        for (ICombinacion combinacion : combinaciones){
-            resultado = combinacion.esValida(cartas);
+    private ConjuntoDeCartas combinacionValida(ArrayList<Carta> cartas){
+        // creo una instancia de validador para chequear que las combinaciones sean validas
+        // (y devuelvo la combinacion
+        IValidador validador = new ValidadorEscalera();
+
+        if (validador.esValida(cartas)){
+            return new Escalera(cartas);
         }
-        return resultado;
+        validador = new ValidadorTercia();
+        if (validador.esValida(cartas)){
+            return new Tercia(cartas);
+        }
+        return null;
     }
 }
