@@ -14,6 +14,7 @@ public abstract class ConjuntoDeCartas {
     public ArrayList<Carta> getCartas(){
         //devuelve la lista de cartas(mazo)
         //TODO retornar otro array para conservar el encapsulamiento y no dañar el array original
+        //return new ArrayList<>(this.cartas);
         return this.cartas;
     }
 

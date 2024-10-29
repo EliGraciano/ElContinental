@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class ValidadorTercia implements IValidador{
 
-    //TODO agregar validacion de mono
     @Override
     public boolean esValida(ArrayList<Carta> cartas) {
         // me fijo que todas las cartas sean del mismo numero, ya que no importa si hay palos repetidos, o Monos(puede ser una tercia de monos)

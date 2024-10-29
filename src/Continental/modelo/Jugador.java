@@ -9,6 +9,8 @@ public class Jugador {
 
     private Mano mano;
 
+    private boolean Turno;
+
     public Jugador(String nombre) {
         this.nombre = nombre;
     }
@@ -21,6 +23,14 @@ public class Jugador {
     public ArrayList<Carta> getMano(){
         // devuelve las cartas de la mano
         return this.mano.getCartas();
+    }
+
+    public boolean isTurno() {
+        return Turno;
+    }
+
+    public void setTurno(boolean esTurno) {
+        this.Turno = esTurno;
     }
 
     public void setMano(Mano mano) {

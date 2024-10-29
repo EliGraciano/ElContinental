@@ -13,7 +13,7 @@ public class Mesa {
 
     // que reciba un numero (cantidad de jugadores) y en base a este decida cuantos mazos crear
     public Mesa(int cantJugadores) {
-        // si la cantidad de jugadores es igual o menor a 4, poder usar grafica, si es mayor usar vista consola
+        // TODO si la cantidad de jugadores es igual o menor a 4, poder usar grafica, si es mayor usar vista consola
         if (cantJugadores < 5){
             this.mazo = new Mazo(2);
             this.mazo.mezclar();
