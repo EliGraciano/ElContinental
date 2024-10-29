@@ -11,6 +11,13 @@ public class Mazo extends ConjuntoDeCartas{
         generarCartas(this.cartas);
     }
 
+    public Mazo(int cantidadMazos) {
+        this.cartas = new ArrayList<>();
+        for (int i = 0; i< cantidadMazos;i++) {
+            generarCartas(this.cartas);
+        }
+    }
+
     private void generarCartas(ArrayList<Carta> mazo){
         // genero todas las cartas que va a tener el mazo
         for (Palo palo : Palo.values()){
@@ -39,6 +46,16 @@ public class Mazo extends ConjuntoDeCartas{
         Carta cartarobada = this.cartas.get(indiceCarta);
         this.cartas.remove(indiceCarta);
         return cartarobada;
+    }
+
+    public Mano darAJugador(int cantCartas){
+        // funcion que saca una cantidad de cartas del mazo
+        ArrayList<Carta> cartas = new ArrayList<>();
+        for (int i = 0;i < cantCartas;i++){
+            Carta carta = this.robar();
+            cartas.add(carta);
+        }
+        return new Mano(cartas);
     }
 
 

@@ -11,7 +11,6 @@ public class Jugador {
 
     public Jugador(String nombre) {
         this.nombre = nombre;
-        this.mano = new Mano();
     }
 
     public String getNombre() {
@@ -24,7 +23,11 @@ public class Jugador {
         return this.mano.getCartas();
     }
 
-    public void descartar(int pos,Pozo pozo){
+    public void setMano(Mano mano) {
+        this.mano = mano;
+    }
+
+    public void descartar(int pos, Pozo pozo){
         // tira al pozo que se le pasa la carta elegida
         Carta cartaDescarte = this.mano.descartar(pos);
         pozo.agregar(cartaDescarte);

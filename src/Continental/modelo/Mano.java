@@ -5,8 +5,8 @@ import java.util.Comparator;
 
 public class Mano extends ConjuntoDeCartas {
 
-    public Mano() {
-        this.cartas = new ArrayList<>();
+    public Mano(ArrayList<Carta> cartas) {
+        this.cartas = cartas;
     }
 
     public Carta descartar(int pos){
