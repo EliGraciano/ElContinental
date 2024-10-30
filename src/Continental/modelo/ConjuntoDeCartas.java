@@ -7,15 +7,13 @@ public abstract class ConjuntoDeCartas {
     protected ArrayList<Carta> cartas;
 
     public int getSize(){
-        //devuelvo el tamanio del mazo
+        //devuelvo el tamaño del mazo
         return this.cartas.size();
     }
 
     public ArrayList<Carta> getCartas(){
-        //devuelve la lista de cartas(mazo)
-        //TODO retornar otro array para conservar el encapsulamiento y no dañar el array original
-        //return new ArrayList<>(this.cartas);
-        return this.cartas;
+        //devuelve la lista de cartas(mazo) copiadas en otro array para conservar el encapsulamiento(se produce aliasing)
+        return new ArrayList<>(this.cartas);
     }
 
 }

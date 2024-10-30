@@ -65,21 +65,7 @@ public class Mano extends ConjuntoDeCartas {
     public int calcularPuntosEnMano(){
         int puntos = 0;
         for (Carta carta: this.cartas){
-            if (carta.getValor() == 1){
-                puntos += 20;
-            }
-            else if (carta.getValor() == 11){
-                puntos += 10;
-            }
-            else if (carta.getValor() == 12){
-                puntos += 10;
-            }
-            else if (carta.getValor() == 13){
-                puntos += 10;
-            }
-            else {
-                puntos += carta.getValor(); // le sumo el valor original de  la carta(si es un mono 50)
-            }
+            carta.getPuntos(puntos);
         }
         return puntos;
     }

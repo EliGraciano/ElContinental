@@ -27,6 +27,27 @@ public class Carta {
         return this.getValor() == carta.getValor();
     }
 
+    public int getPuntos(int contPuntos){
+        //cuanto valgo?
+        //responsabilidad de la carta
+        if (this.getValor() == 1){
+            contPuntos += 20;
+        }
+        else if (this.getValor() == 11){
+            contPuntos += 10;
+        }
+        else if (this.getValor() == 12){
+            contPuntos += 10;
+        }
+        else if (this.getValor() == 13){
+            contPuntos += 10;
+        }
+        else {
+            contPuntos += this.getValor(); // le sumo el valor original de  la carta(si es un mono 50)
+        }
+        return contPuntos;
+    }
+
     @Override
     public String toString() {
         return "Carta{" +valor + " de " + palo + '}';
