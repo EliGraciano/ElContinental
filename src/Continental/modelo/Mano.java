@@ -19,16 +19,17 @@ public class Mano extends ConjuntoDeCartas {
         this.cartas.add(carta);
     }
 
-    public ArrayList<Carta> bajarCartas(ArrayList<Carta> cartas){
+    public Juego bajarJuego(ArrayList<Carta> cartas){
         // devuelvo el conjunto de cartas a bajar y las saco de la mano
         // TODO cambiar por una excepcion el if
-        if (combinacionValida(cartas) != null) {
-            ArrayList<Carta> cartasBajadas = new ArrayList<>();
+        Juego juego = combinacionValida(cartas);
+        if (juego != null) {
+            //ArrayList<Carta> cartasBajadas = new ArrayList<>();
             for (Carta carta : cartas) {
-                cartasBajadas.add(carta);
+                //cartasBajadas.add(carta);
                 this.cartas.remove(carta);
             }
-            return cartasBajadas;
+            return juego;
         }
         else return null;
     }
@@ -38,9 +39,9 @@ public class Mano extends ConjuntoDeCartas {
         this.cartas.sort(Comparator.comparingInt(Carta::getValor));
     }
 
-    private ConjuntoDeCartas combinacionValida(ArrayList<Carta> cartas){
-        // creo una instancia de validador para chequear que las combinaciones sean validas
-        // (y devuelvo la combinacion
+    private Juego combinacionValida(ArrayList<Carta> cartas){
+        // creo una instancia de validador para chequear que el juego a bajar sea valido
+        // (y devuelvo una isntancia dle juego creado(para ponerla en la mesa))
         IValidador validador = new ValidadorEscalera();
 
         if (validador.esValida(cartas)){
@@ -52,4 +53,37 @@ public class Mano extends ConjuntoDeCartas {
         }
         return null;
     }
+
+    public void ubicar(int pos,Juego juego){
+        //TODO aca recibo un booleano que podria usar para indicar si se ubico con exito o no
+        Carta cartaselec = this.cartas.get(pos);
+        if (juego.acomodar(cartaselec)){
+            this.cartas.remove(pos);
+        }
+    }
+
+    public int calcularPuntosEnMano(){
+        int puntos = 0;
+        for (Carta carta: this.cartas){
+            if (carta.getValor() == 1){
+                puntos += 20;
+            }
+            else if (carta.getValor() == 11){
+                puntos += 10;
+            }
+            else if (carta.getValor() == 12){
+                puntos += 10;
+            }
+            else if (carta.getValor() == 13){
+                puntos += 10;
+            }
+            else {
+                puntos += carta.getValor(); // le sumo el valor original de  la carta(si es un mono 50)
+            }
+        }
+        return puntos;
+    }
+
+
+
 }

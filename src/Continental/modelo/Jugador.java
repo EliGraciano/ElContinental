@@ -9,10 +9,17 @@ public class Jugador {
 
     private Mano mano;
 
-    private boolean Turno;
+    private boolean interrumpe; // true si quiere interrumpir, false si no quiere interrumpir(que tenga una tecla que sea robar)
+
+    private boolean juegoBajado; // booleano para saber si el jugador ya bajo sus juegos correspondientes
+
+    private int puntos;
 
     public Jugador(String nombre) {
         this.nombre = nombre;
+        this.puntos = 0;
+        this.interrumpe = false;
+        this.juegoBajado = false;
     }
 
     public String getNombre() {
@@ -25,16 +32,33 @@ public class Jugador {
         return this.mano.getCartas();
     }
 
-    public boolean isTurno() {
-        return Turno;
+    public int getPuntos() {
+        return puntos;
     }
 
-    public void setTurno(boolean esTurno) {
-        this.Turno = esTurno;
+    public boolean isJuegoBajado() {
+        return juegoBajado;
+    }
+
+    public boolean isInterrumpe() {
+        return interrumpe;
     }
 
     public void setMano(Mano mano) {
         this.mano = mano;
+    }
+
+    public void setInterrumpe(boolean interrumpe) {
+        this.interrumpe = interrumpe;
+    }
+
+    public void setJuegoBajado(boolean juegoBajado) {
+        this.juegoBajado = juegoBajado;
+    }
+
+    public void addPuntos() {
+        int puntosSumados = this.mano.calcularPuntosEnMano();
+        this.puntos += puntosSumados;
     }
 
     public void descartar(int pos, Pozo pozo){
@@ -49,17 +73,42 @@ public class Jugador {
         this.mano.agregar(carta);
     }
 
-    public void bajarCartas(ArrayList<Carta> cartas){
-        // TODO esto me esta devolviendo un array de cartas que puedo utilizar
-        this.mano.bajarCartas(cartas);
+    public void robar(Pozo pozo){
+        //roba una carta del mazo y la agrega a la mano
+        Carta carta = pozo.robar();
+        this.mano.agregar(carta);
     }
 
+    public void interrumpirTurno(){
+        // funcion que invocan los jugadores cuando estan fuera de su turno para poder robar del pozo
+        this.setInterrumpe(true);
+    }
+
+    public void robarFueraDeTurno(Mazo mazo,Pozo pozo){
+        //roba una carta del pozo fuera de turno y una del mazo como castigo y las agrega a la mano
+        Carta cartaMazo = mazo.robar();
+        this.mano.agregar(cartaMazo);
+        Carta cartaPozo = pozo.robar();
+        this.mano.agregar(cartaPozo);
+    }
+
+
+    public Juego bajarJuego(ArrayList<Carta> cartas){
+        // bajo el juego
+        Juego juego = this.mano.bajarJuego(cartas);
+        this.setJuegoBajado(true);
+        return juego;
+    }
+
+    //hacer otro ordenar mano para que el usario mueva las cartas y se ordenen como quiere el usuario
     public void ordenarMano(){
         // mecanismo de ordenamiento por valor de carta
         this.mano.ordenar();
     }
 
-
+    public void ubicar(int pos,Juego juego){
+        this.mano.ubicar(pos,juego);
+    }
 
 
 }

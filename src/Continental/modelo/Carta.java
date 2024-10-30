@@ -19,6 +19,14 @@ public class Carta {
         return palo;
     }
 
+    public boolean isPalo(Carta carta){
+        return this.getPalo() == carta.getPalo();
+    }
+
+    public boolean isValor(Carta carta){
+        return this.getValor() == carta.getValor();
+    }
+
     @Override
     public String toString() {
         return "Carta{" +valor + " de " + palo + '}';
