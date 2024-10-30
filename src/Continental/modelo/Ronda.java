@@ -7,9 +7,12 @@ public class Ronda {
     //TODO falta hacer todas las rondas
     private int cartasADar;
 
+    private int nroRonda;
+
     private ArrayList<Juego> combinaciones; // combinaciones a formar por ronda
 
     public Ronda(int nroRonda) {
+        this.nroRonda = nroRonda;
         switch (nroRonda){
             case 1:
                 this.cartasADar = 6;
@@ -39,4 +42,7 @@ public class Ronda {
         return cartasADar;
     }
 
+    public int getNroRonda() {
+        return nroRonda;
+    }
 }

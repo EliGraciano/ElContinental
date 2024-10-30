@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Mesa {
+public class Mesa implements IMesa{
     Mazo mazo;
 
     Pozo pozo;
@@ -13,24 +13,30 @@ public class Mesa {
 
     ArrayList<Juego> juegosEnMesa;
 
-    // que reciba un numero (cantidad de jugadores) y en base a este decida cuantos mazos crear
-    //TODO cambiar para que haya una metodo que se llama  iniciar ronda
+    Ronda rondaActual;
+
+    int nroRondaActual = 0;
+
     public Mesa(int cantJugadores) {
+        // como hago que me pasen el nombre desde la vista?
+        this.jugadores = crearJugadores(cantJugadores);
+    }
+    // que reciba un numero (cantidad de jugadores) y en base a este decida cuantos mazos crear
+    public void iniciarRonda(){
         // TODO si la cantidad de jugadores es igual o menor a 4, poder usar grafica, si es mayor usar vista consola
+        this.nroRondaActual += 1;
         this.pozo = new Pozo();
         this.juegosEnMesa = new ArrayList<>();
+        this.rondaActual = new Ronda(nroRondaActual);
+        int cantJugadores = jugadores.size();
         if (cantJugadores < 5){
             this.mazo = new Mazo(2);
             this.mazo.mezclar();
-            this.jugadores = crearJugadores(cantJugadores);
         }
-        else if (cantJugadores > 5 && cantJugadores < 8){
+        else{
             this.mazo = new Mazo(3);
             this.mazo.mezclar();
-            // como hago que me pasen el nombre desde la vista?
-            this.jugadores = crearJugadores(cantJugadores);
         }
-        else {throw new RuntimeException();}
     }
 
     private Queue<Jugador> crearJugadores(int cantJugadores){
@@ -68,7 +74,7 @@ public class Mesa {
                 //TODO pedir cartas a bajar al controlador que seleccione cualquiera de los juegos a bajar
                 this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // primer juego
                 this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // segundo juego
-                if (Ronda >= 4){
+                if (rondaActual.getNroRonda() >= 4){
                     this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // tercer juego
                 }
                 return EventoMazoPozo.FINTURNO;
@@ -84,27 +90,34 @@ public class Mesa {
                 return EventoMazoPozo.FINTURNO;
             }
             if (evento == EventoMazoPozo.ROBO_POZO){
-                // solo puede robar del pozo, cuando sea el turno del jugador anterior a el
-                return EventoMazoPozo.FINTURNO;
+                //si roba en su turno no hay problema
+                return roboDelPozo(jugador,1);
             }
-
             // lo que puede hacer si ya bajo todos los juegos(robar y ubicar)
         }
         if (jugador.getMano().isEmpty()){
             finRonda();
             return EventoMazoPozo.FINRONDA;
+            //TODO debo poder darle tiempo a los jugadores para que cada uno ubique sus cartas
             //se llama al metodo fin ronda que calcula los puntos de cada jugador y los suma a cada uno
         }
         this.jugadores.add(jugador);
         return EventoMazoPozo.FINTURNO;
 
     }
-    //TODO hacer metodo jugar fuera de turno
-    public void robarFueraDeTurno(){
 
+    public void robarFueraDeTurno(Jugador jugador){
+        //si algun jugador no esta en turno, y desea robar, invoca este metodo, el cual en base a su situacion actual en la partida decide si puede interrumpiro no
+        if (!jugador.isJuegoBajado()){
+            jugador.setInterrumpe(true);
+        }
+        else{
+            int posicion = new ArrayList<>(this.jugadores).indexOf(jugador);
+            if (posicion == 1){ // me fijo que el jugador sea el siguiente que va a tener el turno
+                jugador.setInterrumpe(true);
+            }
+        }
     }
-
-
 
     private EventoMazoPozo roboDelPozo(Jugador jugador, int pos){
         jugador.robar(this.pozo);
