@@ -96,6 +96,7 @@ public class Mesa implements IMesa{
             // lo que puede hacer si ya bajo todos los juegos(robar y ubicar)
         }
         if (jugador.getMano().isEmpty()){
+            //TODO hacer un metodo que permita a cada jugador ubicar sus cartas, y luego de eso llame a la funcion contar puntos
             finRonda();
             return EventoMazoPozo.FINRONDA;
             //TODO debo poder darle tiempo a los jugadores para que cada uno ubique sus cartas
