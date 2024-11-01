@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Mesa implements IMesa{
+    //TODO hacer que puedan cambiar en una cambinacion una carta por un mono(la carta que reemplazaria el mono)
     Mazo mazo;
 
     Pozo pozo;
@@ -97,10 +98,11 @@ public class Mesa implements IMesa{
         }
         if (jugador.getMano().isEmpty()){
             //TODO hacer un metodo que permita a cada jugador ubicar sus cartas, y luego de eso llame a la funcion contar puntos
-            finRonda();
+            ArrayList<Integer> puntos = finRonda();
+            //mostrar todo lo de puntos
             return EventoMazoPozo.FINRONDA;
             //TODO debo poder darle tiempo a los jugadores para que cada uno ubique sus cartas
-            //se llama al metodo fin ronda que calcula los puntos de cada jugador y los suma a cada uno
+            //se llama al metodo fin ronda que calcula los puntos de cada jugador y los suma a cada uno // TODO hacer que se muestre primero la lista de puntos y luego sume
         }
         this.jugadores.add(jugador);
         return EventoMazoPozo.FINTURNO;
@@ -148,12 +150,29 @@ public class Mesa implements IMesa{
 
     }
 
-    private void finRonda(){
+    private ArrayList<Integer> finRonda(){
         //recorro todos lso jugadores y sumo los puntos de las cartas que tienen en la mano
         //usar el getPuntos para ver con cuantos puntos queda cada jugador
+        ArrayList<Integer> puntosAntes = new ArrayList<>();
         for (Jugador jugador : this.jugadores){
+            puntosAntes.add(jugador.getPuntos());
             jugador.addPuntos();
         }
+        return puntosRonda(puntosAntes);
+    }
+
+    private ArrayList<Integer> puntosRonda(ArrayList<Integer> puntosAntes){
+        //funcion que recorre el array de jugadores calculando los puntos que sumaron los jugadores en dicha ronda
+        ArrayList<Integer> puntosASumar = new ArrayList<>();
+        LinkedList<Jugador> jugadores = new LinkedList<>(this.jugadores);
+        for (int i = 0; i < this.jugadores.size() ; i++){
+            puntosASumar.add(jugadores.get(i).getPuntos() - puntosAntes.get(i));
+        }
+        return puntosASumar;
+    }
+
+    private void ubicarCartasFinRonda(Jugador jugador){
+
     }
 
 
