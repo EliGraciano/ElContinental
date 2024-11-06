@@ -10,6 +10,8 @@ import java.util.Queue;
 public class Mesa implements IObservable {
     //TODO hacer que puedan cambiar en una cambinacion una carta por un mono(la carta que reemplazaria el mono)
     //TODO que las funciones no devuelvan un EVENTOMAZOPOZO(o explicar porque)
+    //TODO NOTIFICAR CUANDO EMPIEZA LA RONDA QUE JUEGOS HAY QUE BAJAR
+    //TODO hacer un atributo booleano que se llame robo para saber si ya robo la carta y no permitirle robar mas
     private Mazo mazo;
 
     private Pozo pozo;
@@ -25,6 +27,9 @@ public class Mesa implements IObservable {
     private Jugador turno;
 
     private ArrayList<IObservador> observadores;
+
+    private boolean yaRobo;
+
 
     public Mesa(int cantJugadores) {
         // como hago que me pasen el nombre desde la vista?
@@ -83,28 +88,33 @@ public class Mesa implements IObservable {
 
     }
 
-    private void ubicarCarta(Jugador jugador, Juego juego, int pos) {
-        jugador.ubicar(pos,juego); // le paso la posicion de la carta a ubicar y el juego en donde ubicarlo
+    private void ubicarCarta(int pos,Juego juego) {
+        turno.ubicar(pos,juego);  // le paso la posicion de la carta a ubicar y el juego en donde ubicarlo
         //TODO va a notificar para que la vista muestre
     }
 
-    public void descartar(Jugador jugador, int pos){
-
+    public void descartar(int pos){
+        this.turno.descartar(pos, this.pozo);
+        //notificar(new Evento.chequearcartas));
+        terminarTurno();
     }
 
-    public void roboDelPozo(Jugador jugador, int pos){
-        jugador.robar(this.pozo);
-        jugador.descartar(pos, this.pozo);
-        jugadores.add(jugador);
-
+    public void roboDelPozo(){
+        //chequear que no roben mas de una carta
+        this.turno.robar(this.pozo);
     }
 
-    public void roboDelMazo(Jugador jugador, int pos){
-        jugador.robar(this.mazo);
+    private void terminarTurno(){
+        Jugador poll = this.jugadores.poll();
+        this.jugadores.add(poll);
+        this.yaRobo = false;
+        notificar(new Evento(TipoEvento.CAMBIARTURNO));
+    }
+
+    public void roboDelMazo(){
+        //chequear que no me roben mas de una carta
+        turno.robar(this.mazo);
         interrumpir();
-        jugador.descartar(pos, this.pozo);
-        jugadores.add(jugador);
-
     }
 
     private void interrumpir(){
@@ -234,7 +244,7 @@ public class Mesa implements IObservable {
 //            jugador.setInterrumpe(true);
 //        }
 //        else{
-//            //TODO inchequeable preguntar
+//            // inchequeable preguntar
 //            int posicion = new ArrayList<>(this.jugadores).indexOf(jugador);
 //            if (posicion == 1){ // me fijo que el jugador sea el siguiente que va a tener el turno
 //                jugador.setInterrumpe(true);
