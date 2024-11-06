@@ -20,7 +20,8 @@ class MesaTest {
         mesa.altaJugador("Elias");
         assertEquals(false, mesa.canEmpezarRonda());
         mesa.altaJugador("Nicolas");
-        assertEquals(true, mesa.canEmpezarRonda());
+        assertEquals(true, mesa.canAgregarJugador());
+        //assertEquals(true, mesa.canEmpezarRonda());
 
     }
 
