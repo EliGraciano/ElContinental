@@ -1,11 +1,14 @@
 package Continental.modelo;
 
+import Continental.utilidades.IObservable;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Mesa implements IMesa{
+public class Mesa implements IMesa, IObservable {
     //TODO hacer que puedan cambiar en una cambinacion una carta por un mono(la carta que reemplazaria el mono)
+    //TODO que las funciones no devuelvan un EVENTOMAZOPOZO(o explicar porque)
     Mazo mazo;
 
     Pozo pozo;
@@ -22,7 +25,12 @@ public class Mesa implements IMesa{
         // como hago que me pasen el nombre desde la vista?
         this.jugadores = crearJugadores(cantJugadores);
     }
+
+    public Jugador getTurno(){
+        return this.jugadores.poll();
+    }
     // que reciba un numero (cantidad de jugadores) y en base a este decida cuantos mazos crear
+
     public void iniciarRonda(){
         // TODO si la cantidad de jugadores es igual o menor a 4, poder usar grafica, si es mayor usar vista consola
         this.nroRondaActual += 1;
@@ -48,8 +56,9 @@ public class Mesa implements IMesa{
         return jugadoresCreados;
     }
 
-    private Jugador altaJugador(String nombre){
-        return new Jugador(nombre);
+    private void altaJugador(String nombre){
+        this.jugadores.add(new Jugador(nombre));
+        notificar();
     }
 
     public void repartir(Ronda ronda){
@@ -120,6 +129,19 @@ public class Mesa implements IMesa{
                 jugador.setInterrumpe(true);
             }
         }
+    }
+
+    private void juegosBajados(EventoMazoPozo evento,Jugador jugador,int cartaDescarte){
+        switch (evento){
+            case ROBO_MAZO -> roboDelMazo(jugador,cartaDescarte);
+            case UBICARCARTA -> ubicaCarta(jugador,juego,cartaDescarte);
+            case ROBO_POZO -> roboDelPozo(jugador,cartaDescarte);
+        }
+    }
+
+    private void ubicaCarta(Jugador jugador, Juego juego, int pos) {
+        jugador.ubicar(pos,juego); // le paso la posicion de la carta a ubicar y el juego en donde ubicarlo
+        //TODO va a notificar para que la vista muestre
     }
 
     private EventoMazoPozo roboDelPozo(Jugador jugador, int pos){

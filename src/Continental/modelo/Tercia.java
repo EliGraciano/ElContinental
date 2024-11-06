@@ -27,17 +27,7 @@ public class Tercia extends ConjuntoDeCartas implements Juego{
         }
         return false;
     }
-    // sobre carga para poder acomodar un conjunto de cartas en un juego dado
 
-//    public boolean acomodar(ArrayList<Carta> cartas){
-//        //TODO cambiar por excpecion
-//        int valorTercia = this.valorTercia();
-//        for (Carta carta : cartas) {
-//            if (carta.getValor() == valorTercia) {
-//                this.cartas.add(carta);
-//            }
-//        }
-//    }
 
     
 }

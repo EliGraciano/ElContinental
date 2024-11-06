@@ -3,11 +3,13 @@ package Continental.modelo;
 import java.util.ArrayList;
 
 public class Ronda {
-    //va a haber 7 rondas
-    //TODO falta hacer todas las rondas
     private int cartasADar;
 // TODO agregar nrodetercias y nrodeescaleras como atributos
     private int nroRonda;
+
+    private int nroTercias;
+
+    private int nroEscaleras;
 
     private ArrayList<Juego> combinaciones; // combinaciones a formar por ronda
 
@@ -16,24 +18,38 @@ public class Ronda {
         switch (nroRonda){
             case 1:
                 this.cartasADar = 6;
+                this.nroTercias = 2;
+                this.nroEscaleras = 0;
                 break;
             case 2:
                 this.cartasADar = 7;
+                this.nroTercias = 1;
+                this.nroEscaleras = 1;
                 break;
             case 3:
                 this.cartasADar = 8;
+                this.nroTercias = 0;
+                this.nroEscaleras = 2;
                 break;
             case 4:
                 this.cartasADar = 9;
+                this.nroTercias = 3;
+                this.nroEscaleras = 0;
                 break;
             case 5:
                 this.cartasADar = 10;
+                this.nroTercias = 2;
+                this.nroEscaleras = 1;
                 break;
             case 6:
                 this.cartasADar = 11;
+                this.nroTercias = 1;
+                this.nroEscaleras = 2;
                 break;
             case 7:
                 this.cartasADar = 12;
+                this.nroTercias = 0;
+                this.nroEscaleras = 3;
                 break;
         }
     }
