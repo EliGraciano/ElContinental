@@ -6,7 +6,7 @@ public class Ronda {
     //va a haber 7 rondas
     //TODO falta hacer todas las rondas
     private int cartasADar;
-
+// TODO agregar nrodetercias y nrodeescaleras como atributos
     private int nroRonda;
 
     private ArrayList<Juego> combinaciones; // combinaciones a formar por ronda
