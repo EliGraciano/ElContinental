@@ -1,0 +1,6 @@
+package Continental.modelo;
+
+public enum TipoEvento {
+    COMENZARJUEGO, AGREGARJUGADOR, PAUSARJUEGO, PREGUNTARROBARPOZO, REANUDARJUEGO,
+
+}

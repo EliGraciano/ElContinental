@@ -1,6 +1,6 @@
 package Continental.utilidades;
 
-import Continental.modelo.EventoMazoPozo;
+import Continental.modelo.Evento;
 
 public interface IObservable {
 
@@ -8,6 +8,6 @@ public interface IObservable {
 
     public void eliminarObservador(IObservador observador);
 
-    public void notificar(EventoMazoPozo eventoMazoPozo);
+    public void notificar(Evento evento);
 
 }

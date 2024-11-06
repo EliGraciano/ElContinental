@@ -4,17 +4,12 @@ import java.util.ArrayList;
 
 public class Ronda {
     private int cartasADar;
-// TODO agregar nrodetercias y nrodeescaleras como atributos
-    private int nroRonda;
 
     private int nroTercias;
 
     private int nroEscaleras;
 
-    private ArrayList<Juego> combinaciones; // combinaciones a formar por ronda
-
     public Ronda(int nroRonda) {
-        this.nroRonda = nroRonda;
         switch (nroRonda){
             case 1:
                 this.cartasADar = 6;
@@ -58,7 +53,4 @@ public class Ronda {
         return cartasADar;
     }
 
-    public int getNroRonda() {
-        return nroRonda;
-    }
 }

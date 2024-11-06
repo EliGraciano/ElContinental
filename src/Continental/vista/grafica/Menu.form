@@ -9,14 +9,14 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="17821" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+      <grid id="17821" binding="PBotonOpciones" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="South"/>
         <properties>
           <background color="-15903950"/>
         </properties>
         <border type="none"/>
         <children>
-          <component id="edf6f" class="javax.swing.JButton" binding="perfilButton" default-binding="true">
+          <component id="edf6f" class="javax.swing.JButton" binding="Bperfil">
             <constraints/>
             <properties>
               <background color="-15903950"/>
@@ -24,7 +24,7 @@
               <text value="Perfil"/>
             </properties>
           </component>
-          <component id="f5b28" class="javax.swing.JButton" binding="iniciarMesaButton" default-binding="true">
+          <component id="f5b28" class="javax.swing.JButton" binding="BiniciarMesa">
             <constraints/>
             <properties>
               <background color="-15903950"/>
@@ -32,20 +32,65 @@
               <text value="Iniciar Mesa"/>
             </properties>
           </component>
+          <component id="2f937" class="javax.swing.JButton" binding="BAddPlayer">
+            <constraints/>
+            <properties>
+              <background color="-15903950"/>
+              <foreground color="-655873"/>
+              <text value="Agregar Jugador"/>
+            </properties>
+          </component>
         </children>
       </grid>
-      <grid id="493c" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+      <grid id="493c" binding="Pnombre" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="North"/>
         <properties>
           <background color="-15903950"/>
         </properties>
         <border type="none"/>
         <children>
-          <component id="ec073" class="javax.swing.JLabel">
+          <component id="ec073" class="javax.swing.JLabel" binding="Lnombre">
             <constraints/>
             <properties>
               <font name="JetBrains Mono" size="48" style="3"/>
               <text value="El Continental"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="258db" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="f06f6" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="West"/>
+            <properties>
+              <background color="-15903950"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <hspacer id="31e30">
+                <constraints border-constraint="Center"/>
+              </hspacer>
+            </children>
+          </grid>
+          <grid id="bd976" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="East"/>
+            <properties>
+              <background color="-15903950"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <hspacer id="eb71">
+                <constraints border-constraint="Center"/>
+              </hspacer>
+            </children>
+          </grid>
+          <component id="731a" class="javax.swing.JButton" binding="BImagenmedio" custom-create="true">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <text value=""/>
             </properties>
           </component>
         </children>

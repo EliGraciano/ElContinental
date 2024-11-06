@@ -1,39 +1,52 @@
 package Continental.modelo;
 
 import Continental.utilidades.IObservable;
+import Continental.utilidades.IObservador;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Mesa implements IMesa, IObservable {
+public class Mesa implements IObservable {
     //TODO hacer que puedan cambiar en una cambinacion una carta por un mono(la carta que reemplazaria el mono)
     //TODO que las funciones no devuelvan un EVENTOMAZOPOZO(o explicar porque)
-    Mazo mazo;
+    private Mazo mazo;
 
-    Pozo pozo;
+    private Pozo pozo;
 
-    Queue<Jugador> jugadores;
+    private Queue<Jugador> jugadores;
 
-    ArrayList<Juego> juegosEnMesa;
+    private ArrayList<Juego> juegosEnMesa;
 
-    Ronda rondaActual;
+    private Ronda rondaActual;
 
-    int nroRondaActual = 0;
+    private int nroRondaActual = 0;
+
+    private Jugador turno;
+
+    private ArrayList<IObservador> observadores;
 
     public Mesa(int cantJugadores) {
         // como hago que me pasen el nombre desde la vista?
-        this.jugadores = crearJugadores(cantJugadores);
+        this.observadores = new ArrayList<>();
+        this.jugadores = new LinkedList<>();
     }
 
     public Jugador getTurno(){
-        return this.jugadores.poll();
+        return this.jugadores.peek();
     }
+
     // que reciba un numero (cantidad de jugadores) y en base a este decida cuantos mazos crear
+    public boolean canEmpezarRonda(){
+        //le devuelve a la vista si se puede empezar  o no la ronda para poder poenr le button en enabled
+        return this.jugadores.size() > 2;
+    }
 
     public void iniciarRonda(){
         // TODO si la cantidad de jugadores es igual o menor a 4, poder usar grafica, si es mayor usar vista consola
-        this.nroRondaActual += 1;
+        if (nroRondaActual < 7) {
+            this.nroRondaActual += 1;
+        } else { nroRondaActual = 1; }
         this.pozo = new Pozo();
         this.juegosEnMesa = new ArrayList<>();
         this.rondaActual = new Ronda(nroRondaActual);
@@ -46,19 +59,16 @@ public class Mesa implements IMesa, IObservable {
             this.mazo = new Mazo(3);
             this.mazo.mezclar();
         }
-    }
-
-    private Queue<Jugador> crearJugadores(int cantJugadores){
-        Queue<Jugador> jugadoresCreados = new LinkedList<>();
-        for (int i = 0; i < cantJugadores; i++){
-            jugadoresCreados.add(altaJugador("Pasar nombre aca"));
-        }
-        return jugadoresCreados;
+        //hacer que los eventos sean una clase(para enviar contenido) hago un new evento aca
+        turno = this.jugadores.poll();
+        this.jugadores.add(turno);
+        notificar(new Evento(TipoEvento.COMENZARJUEGO));
     }
 
     private void altaJugador(String nombre){
+        //TODO notificar a la vista que muestre que se unio dicho jugador
         this.jugadores.add(new Jugador(nombre));
-        notificar();
+        notificar(new Evento(TipoEvento.AGREGARJUGADOR));
     }
 
     public void repartir(Ronda ronda){
@@ -69,107 +79,54 @@ public class Mesa implements IMesa, IObservable {
         this.pozo.agregar(this.mazo.robar());
     }
 
-    public EventoMazoPozo jugarTurno(EventoMazoPozo evento){
-        // me fijo que hizo en su turno(si quiere robar del mazo,del pozo, si quiere bajar, o si ya no puede bajar y esta en la otra instancia)
-        Jugador jugador = jugadores.poll();
-        if (!jugador.isJuegoBajado()) {
-            if (evento != EventoMazoPozo.BAJARJUEGO) {
-                // TODO le pido al controlador que me de la posicion de la carta a descartar(hiria le scanner)
-                if (evento == EventoMazoPozo.ROBO_POZO) {
-                    return roboDelPozo(jugador, 1);
-                } else if (evento == EventoMazoPozo.ROBO_MAZO) {
-                    return roboDelMazo(jugador,1);
-                }
-            } else {
-                //TODO pedir cartas a bajar al controlador que seleccione cualquiera de los juegos a bajar
-                this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // primer juego
-                this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // segundo juego
-                if (rondaActual.getNroRonda() >= 4){
-                    this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // tercer juego
-                }
-                return EventoMazoPozo.FINTURNO;
-            }
-        } else {
-            // TODO le pido al controlador que me de la posicion de la carta a descartar(hiria le scanner)
-            if (evento == EventoMazoPozo.ROBO_MAZO){
-                return roboDelMazo(jugador, 1);
-            }
-            if (evento == EventoMazoPozo.UBICARCARTA){
-                Juego juegoAUbicar = this.juegosEnMesa.getFirst();
-                jugador.ubicar(1,juegoAUbicar);
-                return EventoMazoPozo.FINTURNO;
-            }
-            if (evento == EventoMazoPozo.ROBO_POZO){
-                //si roba en su turno no hay problema
-                return roboDelPozo(jugador,1);
-            }
-            // lo que puede hacer si ya bajo todos los juegos(robar y ubicar)
-        }
-        if (jugador.getMano().isEmpty()){
-            //TODO hacer un metodo que permita a cada jugador ubicar sus cartas, y luego de eso llame a la funcion contar puntos
-            ArrayList<Integer> puntos = finRonda();
-            //mostrar todo lo de puntos
-            return EventoMazoPozo.FINRONDA;
-            //TODO debo poder darle tiempo a los jugadores para que cada uno ubique sus cartas
-            //se llama al metodo fin ronda que calcula los puntos de cada jugador y los suma a cada uno // TODO hacer que se muestre primero la lista de puntos y luego sume
-        }
-        this.jugadores.add(jugador);
-        return EventoMazoPozo.FINTURNO;
+    public void bajarJuegos(ArrayList<Carta> juegosABajar){
 
     }
 
-    public void robarFueraDeTurno(Jugador jugador){
-        //si algun jugador no esta en turno, y desea robar, invoca este metodo, el cual en base a su situacion actual en la partida decide si puede interrumpiro no
-        if (!jugador.isJuegoBajado()){
-            jugador.setInterrumpe(true);
-        }
-        else{
-            int posicion = new ArrayList<>(this.jugadores).indexOf(jugador);
-            if (posicion == 1){ // me fijo que el jugador sea el siguiente que va a tener el turno
-                jugador.setInterrumpe(true);
-            }
-        }
-    }
-
-    private void juegosBajados(EventoMazoPozo evento,Jugador jugador,int cartaDescarte){
-        switch (evento){
-            case ROBO_MAZO -> roboDelMazo(jugador,cartaDescarte);
-            case UBICARCARTA -> ubicaCarta(jugador,juego,cartaDescarte);
-            case ROBO_POZO -> roboDelPozo(jugador,cartaDescarte);
-        }
-    }
-
-    private void ubicaCarta(Jugador jugador, Juego juego, int pos) {
+    private void ubicarCarta(Jugador jugador, Juego juego, int pos) {
         jugador.ubicar(pos,juego); // le paso la posicion de la carta a ubicar y el juego en donde ubicarlo
         //TODO va a notificar para que la vista muestre
     }
 
-    private EventoMazoPozo roboDelPozo(Jugador jugador, int pos){
+    public void descartar(Jugador jugador, int pos){
+
+    }
+
+    public void roboDelPozo(Jugador jugador, int pos){
         jugador.robar(this.pozo);
         jugador.descartar(pos, this.pozo);
         jugadores.add(jugador);
-        return EventoMazoPozo.FINTURNO;
+
     }
 
-    private EventoMazoPozo roboDelMazo(Jugador jugador,int pos){
+    public void roboDelMazo(Jugador jugador, int pos){
         jugador.robar(this.mazo);
-        interrumpir(this.jugadores);
+        interrumpir();
         jugador.descartar(pos, this.pozo);
         jugadores.add(jugador);
-        return EventoMazoPozo.FINTURNO;
+
     }
 
-    private void interrumpir(Queue<Jugador> jugadores){
+    private void interrumpir(){
         //me fijo ordenadamente si algun jugador quiere robar el pozo
-        boolean centinela = true;
-        for (Jugador jugador : jugadores) {
-            if (jugador.isInterrumpe() && centinela) {
-                jugador.robarFueraDeTurno(this.mazo,this.pozo);
-                centinela = false;
-            }
-            jugador.setInterrumpe(false);
+        notificar(new Evento(TipoEvento.PAUSARJUEGO));
+        if (this.jugadores.peek() == turno){
+            this.jugadores.add(this.jugadores.poll());
+            notificar(new Evento(TipoEvento.REANUDARJUEGO));
+        }else{
+            Jugador player = this.jugadores.poll();
+            this.jugadores.add(player);
+            //TODO hacer TOString en jugador
+            notificar(new Evento(TipoEvento.PREGUNTARROBARPOZO,player.getNombre()));
         }
+    }
 
+    public void respuestaRobarPozo(boolean respuesta, Jugador jugador ){
+        if (respuesta){
+            jugador.robarFueraDeTurno(this.mazo,this.pozo);
+        }else{
+            interrumpir();
+        }
     }
 
     private ArrayList<Integer> finRonda(){
@@ -197,5 +154,93 @@ public class Mesa implements IMesa, IObservable {
 
     }
 
+    @Override
+    public void notificar(Evento evento){
+        for (IObservador obser : this.observadores){
+            obser.update(evento);
+        }
+    }
+
+    @Override
+    public void agregarObservador(IObservador observador) {
+
+    }
+
+    @Override
+    public void eliminarObservador(IObservador observador) {
+
+    }
+
+
+
+//    public Evento jugarTurno(Evento evento){
+//        // me fijo que hizo en su turno(si quiere robar del mazo,del pozo, si quiere bajar, o si ya no puede bajar y esta en la otra instancia)
+//        Jugador jugador = jugadores.poll();
+//        if (!jugador.isJuegoBajado()) {
+//            if (evento != Evento.BAJARJUEGO) {
+//                //  le pido al controlador que me de la posicion de la carta a descartar(hiria le scanner)
+//                if (evento == Evento.ROBO_POZO) {
+//                    return roboDelPozo(jugador, 1);
+//                } else if (evento == Evento.ROBO_MAZO) {
+//                    return roboDelMazo(jugador,1);
+//                }
+//            } else {
+//                // pedir cartas a bajar al controlador que seleccione cualquiera de los juegos a bajar
+//                this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // primer juego
+//                this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // segundo juego
+//                if (rondaActual.getNroRonda() >= 4){
+//                    this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // tercer juego
+//                }
+//                return Evento.FINTURNO;
+//            }
+//        } else {
+//            //  le pido al controlador que me de la posicion de la carta a descartar(hiria le scanner)
+//            juegosBajados(evento,jugador,pos);
+//            // lo que puede hacer si ya bajo todos los juegos(robar y ubicar)
+//        }
+//        if (jugador.getMano().isEmpty()){
+//            // hacer un metodo que permita a cada jugador ubicar sus cartas, y luego de eso llame a la funcion contar puntos
+//            ArrayList<Integer> puntos = finRonda();
+//            //mostrar to do lo de puntos
+//            return Evento.FINRONDA;
+//            // debo poder darle tiempo a los jugadores para que cada uno ubique sus cartas
+//            //se llama al metodo fin ronda que calcula los puntos de cada jugador y los suma a cada uno //  hacer que se muestre primero la lista de puntos y luego sume
+//        }
+//        this.jugadores.add(jugador);
+//        return Evento.FINTURNO;
+//
+//    }
+
+//    private void juegosBajados(Evento evento, Jugador jugador, int cartaDescarte){
+//        switch (evento){
+//            case ROBO_MAZO -> roboDelMazo(jugador,cartaDescarte);
+//            case UBICARCARTA -> ubicarCarta(jugador,juego,cartaDescarte);
+//            case ROBO_POZO -> roboDelPozo(jugador,cartaDescarte);
+//        }
+//    }
+//
+//    private void juegosNoBajados(Evento evento, Jugador jugador, int cartaDescarte){
+//        switch (evento){
+//            case ROBO_MAZO -> roboDelMazo(jugador,cartaDescarte);
+//            case BAJARJUEGO -> bajarJuegos(jugador,juegos,cartaDescarte);
+//            case ROBO_POZO -> roboDelPozo(jugador,cartaDescarte);
+//        }
+//
+//    }
+
+//    public void robarFueraDeTurno(Jugador jugador){
+//        //si algun jugador no esta en turno, y desea robar, invoca este metodo, el cual en base a su situacion actual en la partida decide si puede interrumpir o no
+//        if (!jugador.isJuegoBajado()){
+//            jugador.setInterrumpe(true);
+//        }
+//        else{
+//            //TODO inchequeable preguntar
+//            int posicion = new ArrayList<>(this.jugadores).indexOf(jugador);
+//            if (posicion == 1){ // me fijo que el jugador sea el siguiente que va a tener el turno
+//                jugador.setInterrumpe(true);
+//            }
+//        }
+//    }
+//
 
 }

@@ -1,8 +1,7 @@
 package Continental.utilidades;
-
-import Continental.modelo.EventoMazoPozo;
+import Continental.modelo.Evento;
 
 public interface IObservador {
 
-    public void update(EventoMazoPozo eventoMazoPozo);
+    public void update(Evento evento);
 }
