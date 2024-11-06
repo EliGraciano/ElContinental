@@ -31,7 +31,7 @@ public class Mesa implements IObservable {
     private boolean yaRobo;
 
 
-    public Mesa(int cantJugadores) {
+    public Mesa() {
         // como hago que me pasen el nombre desde la vista?
         this.observadores = new ArrayList<>();
         this.jugadores = new LinkedList<>();
@@ -45,6 +45,11 @@ public class Mesa implements IObservable {
     public boolean canEmpezarRonda(){
         //le devuelve a la vista si se puede empezar  o no la ronda para poder poenr le button en enabled
         return this.jugadores.size() > 2;
+    }
+
+    public boolean canAgregarJugador(){
+        //le devuelve a la vista si se puede seguir agregando jugadores
+        return this.jugadores.size() < 8;
     }
 
     public void iniciarRonda(){
@@ -70,7 +75,7 @@ public class Mesa implements IObservable {
         notificar(new Evento(TipoEvento.COMENZARJUEGO));
     }
 
-    private void altaJugador(String nombre){
+    public void altaJugador(String nombre){
         //TODO notificar a la vista que muestre que se unio dicho jugador
         this.jugadores.add(new Jugador(nombre));
         notificar(new Evento(TipoEvento.AGREGARJUGADOR));
@@ -88,7 +93,7 @@ public class Mesa implements IObservable {
 
     }
 
-    private void ubicarCarta(int pos,Juego juego) {
+    public void ubicarCarta(int pos,Juego juego) {
         turno.ubicar(pos,juego);  // le paso la posicion de la carta a ubicar y el juego en donde ubicarlo
         //TODO va a notificar para que la vista muestre
     }

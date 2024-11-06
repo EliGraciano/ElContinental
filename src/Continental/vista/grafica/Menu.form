@@ -28,6 +28,7 @@
             <constraints/>
             <properties>
               <background color="-15903950"/>
+              <enabled value="true"/>
               <foreground color="-131078"/>
               <text value="Iniciar Mesa"/>
             </properties>
@@ -87,7 +88,7 @@
               </hspacer>
             </children>
           </grid>
-          <component id="731a" class="javax.swing.JButton" binding="BImagenmedio" custom-create="true">
+          <component id="731a" class="javax.swing.JButton" binding="BImagenmedio">
             <constraints border-constraint="Center"/>
             <properties>
               <text value=""/>

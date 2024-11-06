@@ -22,7 +22,5 @@ public class Menu {
 
     }
 
-    private void createUIComponents() {
-        BImagenmedio.ima
-    }
+
 }

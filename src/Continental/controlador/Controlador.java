@@ -1,5 +1,6 @@
 package Continental.controlador;
 
+import Continental.modelo.Evento;
 import Continental.modelo.Mesa;
 import Continental.utilidades.IObservador;
 
@@ -9,8 +10,12 @@ public class Controlador implements IObservador {
 
     public Controlador(Mesa mesa) {
         this.mesa = mesa;
-        this.mesa.
     }
 
+
+    @Override
+    public void update(Evento evento) {
+
+    }
 
 }
