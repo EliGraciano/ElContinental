@@ -108,7 +108,7 @@ public class Mesa implements IObservable {
         terminarTurno();
     }
 
-    public void roboDelPozo(){
+    public void robarDelPozo(){
         //chequear que no roben mas de una carta
         this.turno.robar(this.pozo);
     }
@@ -120,7 +120,7 @@ public class Mesa implements IObservable {
         notificar(new Evento(TipoEvento.CAMBIARTURNO));
     }
 
-    public void roboDelMazo(){
+    public void robarDelMazo(){
         //chequear que no me roben mas de una carta
         turno.robar(this.mazo);
         interrumpir();
@@ -143,6 +143,8 @@ public class Mesa implements IObservable {
     public void respuestaRobarPozo(boolean respuesta, Jugador jugador ){
         if (respuesta){
             jugador.robarFueraDeTurno(this.mazo,this.pozo);
+            //que termine una vez q robo
+            notificar(new Evento(TipoEvento.REANUDARJUEGO));
         }else{
             interrumpir();
         }
