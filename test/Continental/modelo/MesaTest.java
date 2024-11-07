@@ -29,7 +29,7 @@ class MesaTest {
         mesa.iniciarRonda();
         System.out.println("turno: " + mesa.getTurno(true));
         mesa.repartir();
-        mesa.roboDelMazo();
+        mesa.roboDelPozo();
         mesa.descartar(5);
 
         // mesa.iniciarRonda();
