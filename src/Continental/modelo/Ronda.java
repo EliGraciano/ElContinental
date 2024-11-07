@@ -53,4 +53,8 @@ public class Ronda {
         return cartasADar;
     }
 
+    public int getJuegosABajar(){
+        return this.nroEscaleras + this.nroTercias;
+    }
+
 }

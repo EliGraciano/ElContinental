@@ -23,8 +23,15 @@ public class Carta {
         return this.getPalo() == carta.getPalo();
     }
 
+    public boolean isPalo(Palo palo){
+        return this.getPalo() == palo;
+    }
+
     public boolean isValor(Carta carta){
         return this.getValor() == carta.getValor();
+    }
+    public boolean isValor(int valor){
+        return this.getValor() == valor;
     }
 
     public int getPuntos(int contPuntos){

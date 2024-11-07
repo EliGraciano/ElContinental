@@ -11,6 +11,7 @@ public class Mesa implements IObservable {
     //TODO hacer que puedan cambiar en una cambinacion una carta por un mono(la carta que reemplazaria el mono)
     //TODO NOTIFICAR CUANDO EMPIEZA LA RONDA QUE JUEGOS HAY QUE BAJAR
     //TODO hacer un atributo booleano que se llame robo para saber si ya robo la carta y no permitirle robar mas
+    //TODO al principio de cada ronda preguntar cuantos juegos hay que bajar, para saber cual de las 2 funciones habilitar
     private Mazo mazo;
 
     private Pozo pozo;
@@ -56,6 +57,14 @@ public class Mesa implements IObservable {
         return this.jugadores.size() < 8;
     }
 
+    public boolean canBajar2Juegos(){
+        return rondaActual.getJuegosABajar() == 2;
+    }
+
+    public boolean canBajar3Juegos(){
+        return rondaActual.getJuegosABajar() == 3;
+    }
+
     public void iniciarRonda(){
         // TODO si la cantidad de jugadores es igual o menor a 4, poder usar grafica, si es mayor usar vista consola
         if (nroRondaActual < 7) {
@@ -93,13 +102,31 @@ public class Mesa implements IObservable {
         this.pozo.agregar(this.mazo.robar());
     }
 
-    public void bajarJuegos(ArrayList<Carta> juegosABajar){
+    public void bajarJuegos(ArrayList<Carta> primerJuego,ArrayList<Carta> segundoJuego){
+        //va a haber rondas que va a bajar 2 juegos pero que las rondas TODO en las que hay 3 juegos, no pueda bajar 2
+        Juego juego1 = turno.bajarJuego(primerJuego);
+        Juego juego2 = turno.bajarJuego(segundoJuego);
+        this.juegosEnMesa.add(juego1);
+        this.juegosEnMesa.add(juego2);
+    }
 
+    public void bajarJuegos(ArrayList<Carta> primerJuego,ArrayList<Carta> segundoJuego,ArrayList<Carta> terecerJuego){
+        //va a haber rondas q va a bajar 3 juegos
+        Juego juego1 =turno.bajarJuego(primerJuego);
+        Juego juego2 = turno.bajarJuego(segundoJuego);
+        Juego juego3 = turno.bajarJuego(terecerJuego);
+        this.juegosEnMesa.add(juego1);
+        this.juegosEnMesa.add(juego2);
+        this.juegosEnMesa.add(juego3);
     }
 
     public void ubicarCarta(int pos,Juego juego) {
         turno.ubicar(pos,juego);  // le paso la posicion de la carta a ubicar y el juego en donde ubicarlo
         //TODO va a notificar para que la vista muestre
+    }
+
+    public void ubicarPorMono(int pos, Juego juego){
+        turno.ubicar(pos,juego);
     }
 
     public void descartar(int pos){
@@ -151,7 +178,7 @@ public class Mesa implements IObservable {
     }
 
     private ArrayList<Integer> finRonda(){
-        //recorro todos lso jugadores y sumo los puntos de las cartas que tienen en la mano
+        //recorro todos los jugadores y sumo los puntos de las cartas que tienen en la mano
         //usar el getPuntos para ver con cuantos puntos queda cada jugador
         ArrayList<Integer> puntosAntes = new ArrayList<>();
         for (Jugador jugador : this.jugadores){
@@ -171,7 +198,18 @@ public class Mesa implements IObservable {
         return puntosASumar;
     }
 
-    private void ubicarCartasFinRonda(Jugador jugador){
+    //usar esta funcion para saber si se termino o no se termino la ronda(llamarla despues de cada turno)
+    private boolean esFinRonda(){
+        boolean resultado = false;
+        for (Jugador player : this.jugadores){
+            if(player.getMano().isEmpty()){
+                resultado = true;
+            }
+        }
+        return resultado;
+    }
+
+    private void ubicarCartasFinRonda(){
 
     }
 
@@ -184,12 +222,12 @@ public class Mesa implements IObservable {
 
     @Override
     public void agregarObservador(IObservador observador) {
-
+        this.observadores.add(observador);
     }
 
     @Override
     public void eliminarObservador(IObservador observador) {
-
+        this.observadores.remove(observador);
     }
 
 

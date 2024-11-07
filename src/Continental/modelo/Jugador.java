@@ -3,7 +3,6 @@ package Continental.modelo;
 import java.util.ArrayList;
 
 public class Jugador {
-//TODO clase Juego o Mesa son lo mismo, voy a tener una herencia de rondas
 // (cada ronda va a ser distinta y me sirve pasarle el validador como parametro en base a las reglas de cada ronda)
     private final String nombre;
 
@@ -108,6 +107,10 @@ public class Jugador {
 
     public void ubicar(int pos,Juego juego){
         this.mano.ubicar(pos,juego);
+    }
+
+    public void ubicarPorMono(int pos,Juego juego){
+        this.mano.ubicarPorMono(pos, juego);
     }
 
     @Override

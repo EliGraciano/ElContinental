@@ -40,6 +40,7 @@ public class Escalera  extends ConjuntoDeCartas implements Juego{
         }
     }
 
+    @Override
     // sobre carga para poder acomodar una carta en un juego dado
     public boolean acomodar(Carta carta) {
         // TODO puede pasar que me quieran cambiar un comodin de la escalera por la carta que vale dicho comodin hay q hacerlo todavia
@@ -60,9 +61,31 @@ public class Escalera  extends ConjuntoDeCartas implements Juego{
         }
     }
 
-
-
-
+    @Override
+    public Carta cambiarPorMono(Carta carta) {
+        for (int i = 0; i< getSize() - 1;i++ ){
+            Carta cartaActual = this.cartas.get(i);
+            Carta cartaSiguiente = this.cartas.get(i+1);
+            Palo palo = getPalo();
+            if (cartaActual.isPalo(Palo.MONO)){
+                if (carta.isValor(cartaSiguiente.getValor()-1) || carta.isValor(this.cartas.get(i-1).getValor()+1)){
+                    this.cartas.add(carta);
+                    this.cartas.remove(cartaActual);
+                    return cartaActual;
+                }
+            }
+        }
+        return null;
     }
+
+    private Palo getPalo(){
+        for (Carta carta : this.cartas){
+            if (!carta.isPalo(Palo.MONO)){
+                return carta.getPalo();
+            }
+        }
+        return null;
+    }
+}
 
 

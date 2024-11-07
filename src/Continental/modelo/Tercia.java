@@ -18,6 +18,7 @@ public class Tercia extends ConjuntoDeCartas implements Juego{
         return 0;
     }
 
+    @Override
     // sobre carga para poder acomodar una carta en un juego dado
     public boolean acomodar(Carta carta){
         //TODO cambiar por excpecion
@@ -28,6 +29,24 @@ public class Tercia extends ConjuntoDeCartas implements Juego{
         return false;
     }
 
+    @Override
+    public Carta cambiarPorMono(Carta carta){
+        if (carta.isValor(this.valorTercia())){
+            return sacarMono(carta);
+        }
+        return null;
+    }
 
-    
+    private Carta sacarMono(Carta carta){
+        for (Carta carta1 : this.cartas){
+            if (carta1.isPalo(Palo.MONO)){
+                this.cartas.add(carta);
+                return carta1;
+            }
+        }
+        return null;
+    }
+
+
+
 }

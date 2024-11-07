@@ -62,6 +62,15 @@ public class Mano extends ConjuntoDeCartas {
         }
     }
 
+    public void ubicarPorMono(int pos,Juego juego){
+        Carta cartaselec = this.cartas.get(pos);
+        Carta cartaCambiada = juego.cambiarPorMono(cartaselec);
+        if (cartaCambiada != null){
+            this.cartas.remove(pos);
+            this.cartas.add(cartaCambiada);
+        }
+    }
+
     public int calcularPuntosEnMano(){
         int puntos = 0;
         for (Carta carta: this.cartas){
