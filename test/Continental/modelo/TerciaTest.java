@@ -24,12 +24,16 @@ class TerciaTest {
 
         proyectoE = new ArrayList<>();
         proyectoT = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            proyectoT.add(new Carta(i+1,Palo.DIAMANTE));
+        for (int i = 0; i < 3; i++) {
+            proyectoE.add(new Carta(i+1,Palo.DIAMANTE));
         }
-        for (int i = 0; i < 4; i++) {
-            proyectoE.add(mazo.robar());
-        }
+        //proyectoE.add(new Carta(11,Palo.DIAMANTE));
+
+        proyectoT.add(new Carta(7,Palo.DIAMANTE));
+        proyectoT.add(new Carta(7,Palo.CORAZON));
+        proyectoT.add(new Carta(7,Palo.DIAMANTE));
+        proyectoT.add(new Carta(8,Palo.DIAMANTE));
+
         System.out.println("ESCALERA:");
         for (Carta carta : proyectoE){
             System.out.println(carta.toString()+",");
@@ -42,7 +46,7 @@ class TerciaTest {
 
     @Test
     void comprobarvalidaciones() {
-        System.out.println(iValidadorE.esValida(proyectoE));
         System.out.println(iValidadorT.esValida(proyectoT));
+        System.out.println(iValidadorE.esValida(proyectoE));
     }
 }

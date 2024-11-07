@@ -53,7 +53,7 @@ public class Mesa implements IObservable {
 
     public boolean canAgregarJugador(){
         //le devuelve a la vista si se puede seguir agregando jugadores
-        return this.jugadores.size() <= 8;
+        return this.jugadores.size() < 8;
     }
 
     public void iniciarRonda(){
