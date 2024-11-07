@@ -31,8 +31,15 @@ class MesaTest {
         mesa.repartir();
         mesa.roboDelPozo();
         mesa.descartar(5);
-
-        // mesa.iniciarRonda();
+        mesa.roboDelMazo();
+        mesa.descartar(2);
+        mesa.roboDelMazo();
+        mesa.descartar(1);
+        mesa.roboDelMazo();
+        mesa.descartar(5);
+        mesa.roboDelMazo();
+        mesa.descartar(5);
+        mesa.roboDelPozo();
 
     }
 
