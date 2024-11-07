@@ -110,5 +110,8 @@ public class Jugador {
         this.mano.ubicar(pos,juego);
     }
 
-
+    @Override
+    public String toString() {
+        return ""+ this.nombre + '\'';
+    }
 }

@@ -9,7 +9,6 @@ import java.util.Queue;
 
 public class Mesa implements IObservable {
     //TODO hacer que puedan cambiar en una cambinacion una carta por un mono(la carta que reemplazaria el mono)
-    //TODO que las funciones no devuelvan un EVENTOMAZOPOZO(o explicar porque)
     //TODO NOTIFICAR CUANDO EMPIEZA LA RONDA QUE JUEGOS HAY QUE BAJAR
     //TODO hacer un atributo booleano que se llame robo para saber si ya robo la carta y no permitirle robar mas
     private Mazo mazo;
@@ -41,15 +40,20 @@ public class Mesa implements IObservable {
         return this.jugadores.peek();
     }
 
+    public String getTurno(boolean truee){
+        return this.turno.toString();
+    }
+
     // que reciba un numero (cantidad de jugadores) y en base a este decida cuantos mazos crear
     public boolean canEmpezarRonda(){
         //le devuelve a la vista si se puede empezar  o no la ronda para poder poenr le button en enabled
-        return this.jugadores.size() > 2;
+        return this.jugadores.size() >= 2;
+
     }
 
     public boolean canAgregarJugador(){
         //le devuelve a la vista si se puede seguir agregando jugadores
-        return this.jugadores.size() < 8;
+        return this.jugadores.size() <= 8;
     }
 
     public void iniciarRonda(){
@@ -81,9 +85,9 @@ public class Mesa implements IObservable {
         notificar(new Evento(TipoEvento.AGREGARJUGADOR));
     }
 
-    public void repartir(Ronda ronda){
+    public void repartir(){
         for (Jugador jugador : this.jugadores){
-            Mano mano = this.mazo.darAJugador(ronda.getCartasADar());
+            Mano mano = this.mazo.darAJugador(this.rondaActual.getCartasADar());
             jugador.setMano(mano);
         }
         this.pozo.agregar(this.mazo.robar());
@@ -132,7 +136,7 @@ public class Mesa implements IObservable {
             Jugador player = this.jugadores.poll();
             this.jugadores.add(player);
             //TODO hacer TOString en jugador
-            notificar(new Evento(TipoEvento.PREGUNTARROBARPOZO,player.getNombre()));
+            notificar(new Evento(TipoEvento.PREGUNTARROBARPOZO,player.toString()));
         }
     }
 
