@@ -2,12 +2,14 @@ package Continental.modelo;
 
 import Continental.utilidades.IObservable;
 import Continental.utilidades.IObservador;
+import ar.edu.unlu.rmimvc.observer.ObservableRemoto;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Mesa implements IObservable {
+public class Mesa extends ObservableRemoto implements IMesa {
     //TODO hacer que puedan cambiar en una cambinacion una carta por un mono(la carta que reemplazaria el mono)
     //TODO NOTIFICAR CUANDO EMPIEZA LA RONDA QUE JUEGOS HAY QUE BAJAR
     //TODO hacer un atributo booleano que se llame robo para saber si ya robo la carta y no permitirle robar mas
@@ -37,35 +39,37 @@ public class Mesa implements IObservable {
         this.jugadores = new LinkedList<>();
     }
 
-    public Jugador getTurno(){
-        return this.jugadores.peek();
-    }
-
-    public String getTurno(boolean truee){
+    @Override
+    public String getTurno() throws RemoteException{
         return this.turno.toString();
     }
 
     // que reciba un numero (cantidad de jugadores) y en base a este decida cuantos mazos crear
-    public boolean canEmpezarRonda(){
+    @Override
+    public boolean canEmpezarRonda() throws RemoteException{
         //le devuelve a la vista si se puede empezar  o no la ronda para poder poenr le button en enabled
         return this.jugadores.size() >= 2;
 
     }
 
-    public boolean canAgregarJugador(){
+    @Override
+    public boolean canAgregarJugador() throws RemoteException{
         //le devuelve a la vista si se puede seguir agregando jugadores
         return this.jugadores.size() < 8;
     }
 
-    public boolean canBajar2Juegos(){
+    @Override
+    public boolean canBajar2Juegos() throws RemoteException{
         return rondaActual.getJuegosABajar() == 2;
     }
 
-    public boolean canBajar3Juegos(){
+    @Override
+    public boolean canBajar3Juegos() throws RemoteException{
         return rondaActual.getJuegosABajar() == 3;
     }
 
-    public void iniciarRonda(){
+    @Override
+    public void iniciarRonda() throws RemoteException{
         // TODO si la cantidad de jugadores es igual o menor a 4, poder usar grafica, si es mayor usar vista consola
         if (nroRondaActual < 7) {
             this.nroRondaActual += 1;
@@ -85,16 +89,18 @@ public class Mesa implements IObservable {
         //hacer que los eventos sean una clase(para enviar contenido) hago un new evento aca
         turno = this.jugadores.poll();
         this.jugadores.add(turno);
-        notificar(new Evento(TipoEvento.COMENZARJUEGO));
+        notificarObservadores(new Evento(TipoEvento.COMENZARJUEGO));
     }
 
-    public void altaJugador(String nombre){
+    @Override
+    public void altaJugador(String nombre) throws RemoteException{
         //TODO notificar a la vista que muestre que se unio dicho jugador
         this.jugadores.add(new Jugador(nombre));
-        notificar(new Evento(TipoEvento.AGREGARJUGADOR));
+        notificarObservadores(new Evento(TipoEvento.AGREGARJUGADOR));
     }
 
-    public void repartir(){
+    @Override
+    public void repartir() throws RemoteException{
         for (Jugador jugador : this.jugadores){
             Mano mano = this.mazo.darAJugador(this.rondaActual.getCartasADar());
             jugador.setMano(mano);
@@ -102,7 +108,8 @@ public class Mesa implements IObservable {
         this.pozo.agregar(this.mazo.robar());
     }
 
-    public void bajarJuegos(ArrayList<Carta> primerJuego,ArrayList<Carta> segundoJuego){
+    @Override
+    public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego) throws RemoteException{
         //va a haber rondas que va a bajar 2 juegos pero que las rondas TODO en las que hay 3 juegos, no pueda bajar 2
         Juego juego1 = turno.bajarJuego(primerJuego);
         Juego juego2 = turno.bajarJuego(segundoJuego);
@@ -110,7 +117,8 @@ public class Mesa implements IObservable {
         this.juegosEnMesa.add(juego2);
     }
 
-    public void bajarJuegos(ArrayList<Carta> primerJuego,ArrayList<Carta> segundoJuego,ArrayList<Carta> terecerJuego){
+    @Override
+    public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego, ArrayList<Carta> terecerJuego) throws RemoteException{
         //va a haber rondas q va a bajar 3 juegos
         Juego juego1 =turno.bajarJuego(primerJuego);
         Juego juego2 = turno.bajarJuego(segundoJuego);
@@ -120,62 +128,80 @@ public class Mesa implements IObservable {
         this.juegosEnMesa.add(juego3);
     }
 
-    public void ubicarCarta(int pos,Juego juego) {
+    @Override
+    public void ubicarCarta(int pos, Juego juego)  throws RemoteException{
         turno.ubicar(pos,juego);  // le paso la posicion de la carta a ubicar y el juego en donde ubicarlo
         //TODO va a notificar para que la vista muestre
     }
 
-    public void ubicarPorMono(int pos, Juego juego){
+    @Override
+    public void ubicarPorMono(int pos, Juego juego) throws RemoteException{
         turno.ubicar(pos,juego);
     }
 
-    public void descartar(int pos){
+    @Override
+    public void descartar(int pos) throws RemoteException{
         this.turno.descartar(pos, this.pozo);
         //notificar(new Evento.chequearcartas));
         terminarTurno();
     }
 
-    public void robarDelPozo(){
+    @Override
+    public void robarDelPozo() throws RemoteException{
         //chequear que no roben mas de una carta
         this.turno.robar(this.pozo);
+        this.yaRobo = true;
     }
 
     private void terminarTurno(){
         Jugador poll = this.jugadores.poll();
         this.jugadores.add(poll);
         this.yaRobo = false;
-        notificar(new Evento(TipoEvento.CAMBIARTURNO));
+        notificarObservadores(new Evento(TipoEvento.CAMBIARTURNO));
     }
 
-    public void robarDelMazo(){
+    @Override
+    public void robarDelMazo() throws RemoteException{
         //chequear que no me roben mas de una carta
         turno.robar(this.mazo);
+        this.yaRobo = true;
         interrumpir();
     }
 
     private void interrumpir(){
         //me fijo ordenadamente si algun jugador quiere robar el pozo
-        notificar(new Evento(TipoEvento.PAUSARJUEGO));
+        notificarObservadores(new Evento(TipoEvento.PAUSARJUEGO));
         if (this.jugadores.peek() == turno){
             this.jugadores.add(this.jugadores.poll());
-            notificar(new Evento(TipoEvento.REANUDARJUEGO));
+            notificarObservadores(new Evento(TipoEvento.REANUDARJUEGO));
         }else{
             Jugador player = this.jugadores.poll();
             this.jugadores.add(player);
-            //TODO hacer TOString en jugador
-            notificar(new Evento(TipoEvento.PREGUNTARROBARPOZO,player.toString()));
+            //hacer TOString en jugador
+            notificarObservadores(new Evento(TipoEvento.PREGUNTARROBARPOZO,player.toString()));
         }
     }
 
-    public void respuestaRobarPozo(boolean respuesta, Jugador jugador ){
-        //TODO el controlador pasa un string con el nombre del jugador y busca en la lista dicho jugador
+    @Override
+    public void respuestaRobarPozo(boolean respuesta, String jugador) throws RemoteException {
+        //el controlador pasa un string con el nombre del jugador y busca en la lista dicho jugador para no perder encapsulamietno(correcion de snati :))
+        Jugador jugaux = buscarjugador(jugador);
         if (respuesta){
-            jugador.robarFueraDeTurno(this.mazo,this.pozo);
+            jugaux.robarFueraDeTurno(this.mazo,this.pozo);
             //que termine una vez q robo
-            notificar(new Evento(TipoEvento.REANUDARJUEGO));
+            notificarObservadores(new Evento(TipoEvento.REANUDARJUEGO));
         }else{
             interrumpir();
         }
+    }
+
+    private Jugador buscarjugador(String nombre){
+        for(Jugador jugador : this.jugadores){
+            if (jugador.getNombre().equals(nombre)){
+                return jugador;
+            }
+        }
+        return null;
     }
 
     private ArrayList<Integer> finRonda(){
@@ -215,92 +241,13 @@ public class Mesa implements IObservable {
     }
 
     @Override
-    public void notificar(Evento evento){
+    public void notificarObservadores(Object arg){
         for (IObservador obser : this.observadores){
-            obser.update(evento);
+            obser.update((Evento)arg);
         }
     }
 
-    @Override
-    public void agregarObservador(IObservador observador) {
-        this.observadores.add(observador);
-    }
-
-    @Override
-    public void eliminarObservador(IObservador observador) {
-        this.observadores.remove(observador);
-    }
 
 
-
-//    public Evento jugarTurno(Evento evento){
-//        // me fijo que hizo en su turno(si quiere robar del mazo,del pozo, si quiere bajar, o si ya no puede bajar y esta en la otra instancia)
-//        Jugador jugador = jugadores.poll();
-//        if (!jugador.isJuegoBajado()) {
-//            if (evento != Evento.BAJARJUEGO) {
-//                //  le pido al controlador que me de la posicion de la carta a descartar(hiria le scanner)
-//                if (evento == Evento.ROBO_POZO) {
-//                    return roboDelPozo(jugador, 1);
-//                } else if (evento == Evento.ROBO_MAZO) {
-//                    return roboDelMazo(jugador,1);
-//                }
-//            } else {
-//                // pedir cartas a bajar al controlador que seleccione cualquiera de los juegos a bajar
-//                this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // primer juego
-//                this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // segundo juego
-//                if (rondaActual.getNroRonda() >= 4){
-//                    this.juegosEnMesa.add(jugador.bajarJuego(jugador.getMano())); // tercer juego
-//                }
-//                return Evento.FINTURNO;
-//            }
-//        } else {
-//            //  le pido al controlador que me de la posicion de la carta a descartar(hiria le scanner)
-//            juegosBajados(evento,jugador,pos);
-//            // lo que puede hacer si ya bajo todos los juegos(robar y ubicar)
-//        }
-//        if (jugador.getMano().isEmpty()){
-//            // hacer un metodo que permita a cada jugador ubicar sus cartas, y luego de eso llame a la funcion contar puntos
-//            ArrayList<Integer> puntos = finRonda();
-//            //mostrar to do lo de puntos
-//            return Evento.FINRONDA;
-//            // debo poder darle tiempo a los jugadores para que cada uno ubique sus cartas
-//            //se llama al metodo fin ronda que calcula los puntos de cada jugador y los suma a cada uno //  hacer que se muestre primero la lista de puntos y luego sume
-//        }
-//        this.jugadores.add(jugador);
-//        return Evento.FINTURNO;
-//
-//    }
-
-//    private void juegosBajados(Evento evento, Jugador jugador, int cartaDescarte){
-//        switch (evento){
-//            case ROBO_MAZO -> roboDelMazo(jugador,cartaDescarte);
-//            case UBICARCARTA -> ubicarCarta(jugador,juego,cartaDescarte);
-//            case ROBO_POZO -> roboDelPozo(jugador,cartaDescarte);
-//        }
-//    }
-//
-//    private void juegosNoBajados(Evento evento, Jugador jugador, int cartaDescarte){
-//        switch (evento){
-//            case ROBO_MAZO -> roboDelMazo(jugador,cartaDescarte);
-//            case BAJARJUEGO -> bajarJuegos(jugador,juegos,cartaDescarte);
-//            case ROBO_POZO -> roboDelPozo(jugador,cartaDescarte);
-//        }
-//
-//    }
-
-//    public void robarFueraDeTurno(Jugador jugador){
-//        //si algun jugador no esta en turno, y desea robar, invoca este metodo, el cual en base a su situacion actual en la partida decide si puede interrumpir o no
-//        if (!jugador.isJuegoBajado()){
-//            jugador.setInterrumpe(true);
-//        }
-//        else{
-//            // inchequeable preguntar
-//            int posicion = new ArrayList<>(this.jugadores).indexOf(jugador);
-//            if (posicion == 1){ // me fijo que el jugador sea el siguiente que va a tener el turno
-//                jugador.setInterrumpe(true);
-//            }
-//        }
-//    }
-//
 
 }
