@@ -37,7 +37,7 @@ public interface IMesa extends IObservableRemoto {
 
     void robarDelMazo() throws RemoteException;
 
-    void respuestaRobarPozo(boolean respuesta, Jugador jugador) throws RemoteException;
+    void respuestaRobarPozo(boolean respuesta, String jugador) throws RemoteException;
 
     void notificarObservadores(Object arg);
 }
