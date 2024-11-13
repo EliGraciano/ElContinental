@@ -168,6 +168,7 @@ public class Mesa implements IObservable {
     }
 
     public void respuestaRobarPozo(boolean respuesta, Jugador jugador ){
+        //TODO el controlador pasa un string con el nombre del jugador y busca en la lista dicho jugador
         if (respuesta){
             jugador.robarFueraDeTurno(this.mazo,this.pozo);
             //que termine una vez q robo
