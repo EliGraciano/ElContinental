@@ -1,6 +1,5 @@
 package Continental.modelo;
 
-import Continental.utilidades.IObservable;
 import Continental.utilidades.IObservador;
 import ar.edu.unlu.rmimvc.observer.ObservableRemoto;
 
@@ -27,6 +26,8 @@ public class Mesa extends ObservableRemoto implements IMesa {
     private int nroRondaActual = 0;
 
     private Jugador turno;
+
+    private Jugador jugadorATerminar;
 
     private ArrayList<IObservador> observadores;
 
@@ -89,18 +90,20 @@ public class Mesa extends ObservableRemoto implements IMesa {
         //hacer que los eventos sean una clase(para enviar contenido) hago un new evento aca
         turno = this.jugadores.poll();
         this.jugadores.add(turno);
-        notificarObservadores(new Evento(TipoEvento.COMENZARJUEGO));
+        this.jugadorATerminar = null;
+        repartir();
+        notificarObservadores(new Evento(TipoEvento.COMENZOJUEGO));
     }
 
     @Override
     public void altaJugador(String nombre) throws RemoteException{
         //TODO notificar a la vista que muestre que se unio dicho jugador
         this.jugadores.add(new Jugador(nombre));
-        notificarObservadores(new Evento(TipoEvento.AGREGARJUGADOR));
+        notificarObservadores(new Evento(TipoEvento.AGREGUEJUGADOR));
     }
 
-    @Override
-    public void repartir() throws RemoteException{
+    //repartir privado
+    private void repartir(){
         for (Jugador jugador : this.jugadores){
             Mano mano = this.mazo.darAJugador(this.rondaActual.getCartasADar());
             jugador.setMano(mano);
@@ -155,9 +158,30 @@ public class Mesa extends ObservableRemoto implements IMesa {
 
     private void terminarTurno(){
         Jugador poll = this.jugadores.poll();
-        this.jugadores.add(poll);
+        if (esFinRonda()) {
+            //en este momento los jugadores no se pueden descartar mas cartas(solo ubicar)
+            this.jugadorATerminar = poll;
+            this.turno = poll;
+            notificarObservadores(new Evento(TipoEvento.ULTIMARONDA));
+        }
+        this.jugadores.add(turno);
+        this.turno = poll;
         this.yaRobo = false;
-        notificarObservadores(new Evento(TipoEvento.CAMBIARTURNO));
+        notificarObservadores(new Evento(TipoEvento.CAMBIOTURNO));
+
+    }
+
+    @Override
+    public void saltarTurno(){
+        //se va a invocar cuando alla ubicado sus cartas y toque el boton(o cuando no tenga nada para ubicar y lo toque)
+        Jugador poll = this.jugadores.poll();
+        if (poll == this.jugadorATerminar){
+            //si dio la vuelta(pasaron todos) llamo a la funcion para terminar la ronda
+            finRonda();
+            notificarObservadores(new Evento(TipoEvento.FINRONDA));
+        }
+        this.turno = poll;
+        this.jugadores.add(poll);
     }
 
     @Override
@@ -170,7 +194,7 @@ public class Mesa extends ObservableRemoto implements IMesa {
 
     private void interrumpir(){
         //me fijo ordenadamente si algun jugador quiere robar el pozo
-        notificarObservadores(new Evento(TipoEvento.PAUSARJUEGO));
+        notificarObservadores(new Evento(TipoEvento.PAUSAJUEGO));
         if (this.jugadores.peek() == turno){
             this.jugadores.add(this.jugadores.poll());
             notificarObservadores(new Evento(TipoEvento.REANUDARJUEGO));
@@ -184,7 +208,7 @@ public class Mesa extends ObservableRemoto implements IMesa {
 
     @Override
     public void respuestaRobarPozo(boolean respuesta, String jugador) throws RemoteException {
-        //el controlador pasa un string con el nombre del jugador y busca en la lista dicho jugador para no perder encapsulamietno(correcion de snati :))
+        //el controlador pasa un string con el nombre del jugador y busca en la lista dicho jugador para no perder encapsulamietno(correcion de santi :))
         Jugador jugaux = buscarjugador(jugador);
         if (respuesta){
             jugaux.robarFueraDeTurno(this.mazo,this.pozo);
@@ -212,6 +236,8 @@ public class Mesa extends ObservableRemoto implements IMesa {
             puntosAntes.add(jugador.getPuntos());
             jugador.addPuntos();
         }
+        //hacer que vuelva al menu principal y que se pueda continuar con otra ronda
+
         return puntosRonda(puntosAntes);
     }
 
@@ -227,17 +253,7 @@ public class Mesa extends ObservableRemoto implements IMesa {
 
     //usar esta funcion para saber si se termino o no se termino la ronda(llamarla despues de cada turno)
     private boolean esFinRonda(){
-        boolean resultado = false;
-        for (Jugador player : this.jugadores){
-            if(player.getMano().isEmpty()){
-                resultado = true;
-            }
-        }
-        return resultado;
-    }
-
-    private void ubicarCartasFinRonda(){
-
+        return this.turno.getMano().isEmpty() && this.turno.isJuegoBajado();
     }
 
     @Override

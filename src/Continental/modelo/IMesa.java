@@ -21,8 +21,6 @@ public interface IMesa extends IObservableRemoto {
 
     void altaJugador(String nombre) throws RemoteException;
 
-    void repartir() throws RemoteException;
-
     void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego) throws RemoteException;
 
     void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego, ArrayList<Carta> terecerJuego) throws RemoteException;
@@ -34,6 +32,8 @@ public interface IMesa extends IObservableRemoto {
     void descartar(int pos) throws RemoteException;
 
     void robarDelPozo() throws RemoteException;
+
+    void saltarTurno();
 
     void robarDelMazo() throws RemoteException;
 

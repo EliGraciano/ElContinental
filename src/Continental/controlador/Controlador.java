@@ -16,6 +16,10 @@ public class Controlador implements IControladorRemoto {
         this.IMesa = IMesa;
     }
 
+
+
+
+
     public void setModeloRemoto(){
 
     }

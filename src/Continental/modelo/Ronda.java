@@ -9,6 +9,7 @@ public class Ronda {
 
     private int nroEscaleras;
 
+
     public Ronda(int nroRonda) {
         switch (nroRonda){
             case 1:
