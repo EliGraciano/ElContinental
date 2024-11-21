@@ -9,9 +9,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Mesa extends ObservableRemoto implements IMesa {
-    //TODO hacer que puedan cambiar en una cambinacion una carta por un mono(la carta que reemplazaria el mono)
     //TODO NOTIFICAR CUANDO EMPIEZA LA RONDA QUE JUEGOS HAY QUE BAJAR
-    //TODO hacer un atributo booleano que se llame robo para saber si ya robo la carta y no permitirle robar mas
     //TODO al principio de cada ronda preguntar cuantos juegos hay que bajar, para saber cual de las 2 funciones habilitar
     private Mazo mazo;
 
@@ -97,7 +95,7 @@ public class Mesa extends ObservableRemoto implements IMesa {
 
     @Override
     public void altaJugador(String nombre) throws RemoteException{
-        //TODO notificar a la vista que muestre que se unio dicho jugador
+
         this.jugadores.add(new Jugador(nombre));
         notificarObservadores(new Evento(TipoEvento.AGREGUEJUGADOR));
     }

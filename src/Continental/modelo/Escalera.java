@@ -43,7 +43,6 @@ public class Escalera  extends ConjuntoDeCartas implements Juego{
     @Override
     // sobre carga para poder acomodar una carta en un juego dado
     public boolean acomodar(Carta carta) {
-        // TODO puede pasar que me quieran cambiar un comodin de la escalera por la carta que vale dicho comodin hay q hacerlo todavia
         Palo paloEscalera = this.paloEscalera();
         if (this.valorUltimaCarta() < 13 && this.valorPrimeraCarta() > 1) {
             // si la carta que me pasan se puede ubicar al final o al principio, la ubico

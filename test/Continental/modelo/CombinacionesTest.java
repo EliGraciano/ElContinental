@@ -21,9 +21,13 @@ class CombinacionesTest {
         proyectoE = new ArrayList<>();
         //proyectoT = new ArrayList<>();
 
+
+
+        proyectoE.add(new Carta(1,Palo.DIAMANTE));
+        //proyectoE.add(new Carta(50,Palo.MONO));
+        //proyectoE.add(new Carta(2,Palo.DIAMANTE));
         proyectoE.add(new Carta(50,Palo.MONO));
-        proyectoE.add(new Carta(2,Palo.DIAMANTE));
-        proyectoE.add(new Carta(50,Palo.MONO));
+        proyectoE.add(new Carta(3,Palo.DIAMANTE));
         proyectoE.add(new Carta(4,Palo.DIAMANTE));
 
 
@@ -40,21 +44,23 @@ class CombinacionesTest {
         assertEquals(true,iValidadorE.esValida(proyectoE));
         Juego escalera = new Escalera(proyectoE);
 
-        ArrayList<Carta> modeloMano = new ArrayList<>();
-        modeloMano.add(new Carta(1,Palo.DIAMANTE));
-        modeloMano.add(new Carta(3,Palo.DIAMANTE));
-        Mano mano = new Mano(modeloMano);
 
-        Jugador player = new Jugador("Elias");
-        player.setMano(mano);
 
-        player.ubicarPorMono(0,escalera);
-
-        System.out.println("ESCALERA:");
-        for (Carta carta : proyectoE){
-            System.out.println(carta.toString()+",");
-        }
-
-        System.out.println(iValidadorE.esValida(proyectoE));
+//        ArrayList<Carta> modeloMano = new ArrayList<>();
+//        modeloMano.add(new Carta(1,Palo.DIAMANTE));
+//        modeloMano.add(new Carta(3,Palo.DIAMANTE));
+//        Mano mano = new Mano(modeloMano);
+//
+//        Jugador player = new Jugador("Elias");
+//        player.setMano(mano);
+//
+//        player.ubicarPorMono(0,escalera);
+//
+//        System.out.println("ESCALERA:");
+//        for (Carta carta : proyectoE){
+//            System.out.println(carta.toString()+",");
+//        }
+//
+//        System.out.println(iValidadorE.esValida(proyectoE));
     }
 }

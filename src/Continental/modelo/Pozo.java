@@ -10,9 +10,6 @@ public class Pozo extends ConjuntoDeCartas{
     }
 
     public Carta robar(){
-        //robo la primera carta
-        //int ultimacarta = this.getSize();
-        //TODO TENIA UN PROBLEMA DE INDICES
         Carta cartarobada = this.cartas.getLast();
         this.cartas.remove(this.cartas.getLast());
         return cartarobada;
