@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class Mazo extends ConjuntoDeCartas{
 
+
     public Mazo() {
         this.cartas = new ArrayList<>();
         generarCartas(this.cartas);
@@ -19,6 +20,7 @@ public class Mazo extends ConjuntoDeCartas{
     }
 
     private void generarCartas(ArrayList<Carta> mazo){
+        //sacar el parametro y utilizar el this(acceder al aributo cartas)
         // genero todas las cartas que va a tener el mazo
         for (Palo palo : Palo.values()){
             if (palo != Palo.MONO) {
