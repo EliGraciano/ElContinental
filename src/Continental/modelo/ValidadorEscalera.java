@@ -8,27 +8,39 @@ public class ValidadorEscalera implements IValidador{
 //TODO REHACER LA LOGICA DE NUEVO, ESTA MAL
     @Override
     public boolean esValida(ArrayList<Carta> cartas){
-            // Verificar que la escalera tenga al menos 4 cartas
-        if (cartas.size() < 4 || !this.todasDelMismoPalo(cartas)) { //me fijo q seal del mismo palo y tenga al menos 4 cartas
-        return false;
-    }
-    ArrayList<Carta> copiaCartas = (ArrayList<Carta>) cartas.clone();
-    int monos = contadorMonos(copiaCartas);
-    ordenarCartas(copiaCartas);
-        for (int i = 0; i < copiaCartas.size()-1; i++){
-        Carta cartaActual = copiaCartas.get(i);
-        Carta cartaSiguiente = copiaCartas.get(i+1);
-        Carta cartaSubSiguiente = copiaCartas.get(i+2);
-        if (!cartaActual.isValor(cartaSiguiente.getValor()-1)){
-            monos -= 1;
-            if (!cartaSubSiguiente.isPalo(Palo.MONO)) {
-                if (!cartaSubSiguiente.isValor(cartaActual.getValor() - 2)) {
-                    return false;
-                }
-            }
+        //hay que parametrizar la cantidad mínima de cartas.
+        if (cartas.size() < 4 || !this.todasDelMismoPalo(cartas)) { //me fijo q sean del mismo palo y tenga al menos 4 cartas
+            return false;
         }
-    }
-        return monos >= 0;
+        ArrayList<Carta> copiaCartas = (ArrayList<Carta>) cartas.clone();
+        int cantidadMonosSeguidos = 0;
+        int valorSiguiente;
+
+        while (!copiaCartas.isEmpty() && (copiaCartas.getFirst().getPalo() == Palo.MONO)) {
+            cantidadMonosSeguidos++;
+            copiaCartas.removeFirst();
+        }
+        if (cantidadMonosSeguidos > 1) return false;
+        else if (!copiaCartas.isEmpty()) {
+            valorSiguiente = copiaCartas.getFirst().getValor() + 1;
+            boolean salir = false;
+            cantidadMonosSeguidos = 0;
+            while(!copiaCartas.isEmpty() && !salir) {
+                copiaCartas.removeFirst();
+                //Hay que parametrizar el valor del mono
+                if (!copiaCartas.isEmpty() && (copiaCartas.getFirst().getValor() == 50 || copiaCartas.getFirst().getValor() == valorSiguiente)) {
+                    if (copiaCartas.getFirst().getValor() == 50) {
+                        cantidadMonosSeguidos++;
+                        if (cantidadMonosSeguidos > 1) return false;
+                    } else {
+                        cantidadMonosSeguidos = 0;
+                    }
+                    valorSiguiente++;
+                } else salir = true;
+            }
+            //Se rompió la escalera y quedaron más cartas.
+            return copiaCartas.isEmpty();
+        } else return true;
     }
 
     private void ordenarCartas(ArrayList<Carta> cartas){

@@ -23,12 +23,13 @@ class CombinacionesTest {
 
 
 
-        proyectoE.add(new Carta(1,Palo.DIAMANTE));
-        //proyectoE.add(new Carta(50,Palo.MONO));
-        //proyectoE.add(new Carta(2,Palo.DIAMANTE));
+        //proyectoE.add(new Carta(1,Palo.DIAMANTE));
         proyectoE.add(new Carta(50,Palo.MONO));
+        proyectoE.add(new Carta(50,Palo.MONO));
+        //proyectoE.add(new Carta(2,Palo.DIAMANTE));
         proyectoE.add(new Carta(3,Palo.DIAMANTE));
         proyectoE.add(new Carta(4,Palo.DIAMANTE));
+        //proyectoE.add(new Carta(5,Palo.DIAMANTE));
 
 
         System.out.println("ESCALERA:");

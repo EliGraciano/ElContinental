@@ -2,35 +2,25 @@ package Continental.controlador;
 
 import Continental.modelo.Evento;
 import Continental.modelo.IMesa;
+import Continental.modelo.Mesa;
 import Continental.utilidades.IObservador;
 import ar.edu.unlu.rmimvc.cliente.IControladorRemoto;
 import ar.edu.unlu.rmimvc.observer.IObservableRemoto;
 
 import java.rmi.RemoteException;
 
-public class Controlador implements IControladorRemoto {
+public class Controlador implements IObservador {
 
-    private IMesa IMesa;
+    private Mesa mesa;
 
     public Controlador(IMesa IMesa) {
-        this.IMesa = IMesa;
+        this.mesa = mesa;
     }
 
 
-
-
-
-    public void setModeloRemoto(){
-
-    }
 
     @Override
-    public <T extends IObservableRemoto> void setModeloRemoto(T t) throws RemoteException {
-
-    }
-
-    @Override
-    public void actualizar(IObservableRemoto iObservableRemoto, Object o) throws RemoteException {
+    public void update(Evento evento) {
 
     }
 }

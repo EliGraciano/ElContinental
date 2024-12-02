@@ -1,5 +1,6 @@
 package Continental.modelo;
 
+import Continental.utilidades.IObservable;
 import Continental.utilidades.IObservador;
 import ar.edu.unlu.rmimvc.observer.ObservableRemoto;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Mesa extends ObservableRemoto implements IMesa {
+public class Mesa implements IObservable {
     //TODO NOTIFICAR CUANDO EMPIEZA LA RONDA QUE JUEGOS HAY QUE BAJAR
     //TODO al principio de cada ronda preguntar cuantos juegos hay que bajar, para saber cual de las 2 funciones habilitar
     private Mazo mazo;
@@ -38,37 +39,37 @@ public class Mesa extends ObservableRemoto implements IMesa {
         this.jugadores = new LinkedList<>();
     }
 
-    @Override
-    public String getTurno() throws RemoteException{
+
+    public String getTurno() {
         return this.turno.toString();
     }
 
     // que reciba un numero (cantidad de jugadores) y en base a este decida cuantos mazos crear
-    @Override
-    public boolean canEmpezarRonda() throws RemoteException{
+
+    public boolean canEmpezarRonda() {
         //le devuelve a la vista si se puede empezar  o no la ronda para poder poenr le button en enabled
         return this.jugadores.size() >= 2;
 
     }
 
-    @Override
-    public boolean canAgregarJugador() throws RemoteException{
+
+    public boolean canAgregarJugador() {
         //le devuelve a la vista si se puede seguir agregando jugadores
         return this.jugadores.size() < 8;
     }
 
-    @Override
-    public boolean canBajar2Juegos() throws RemoteException{
+
+    public boolean canBajar2Juegos() {
         return rondaActual.getJuegosABajar() == 2;
     }
 
-    @Override
-    public boolean canBajar3Juegos() throws RemoteException{
+
+    public boolean canBajar3Juegos() {
         return rondaActual.getJuegosABajar() == 3;
     }
 
-    @Override
-    public void iniciarRonda() throws RemoteException{
+
+    public void iniciarRonda() {
         // TODO si la cantidad de jugadores es igual o menor a 4, poder usar grafica, si es mayor usar vista consola
         if (nroRondaActual < 7) {
             this.nroRondaActual += 1;
@@ -90,14 +91,14 @@ public class Mesa extends ObservableRemoto implements IMesa {
         this.jugadores.add(turno);
         this.jugadorATerminar = null;
         repartir();
-        notificarObservadores(new Evento(TipoEvento.COMENZOJUEGO));
+        notificar(new Evento(TipoEvento.COMENZOJUEGO));
     }
 
-    @Override
-    public void altaJugador(String nombre) throws RemoteException{
+
+    public void altaJugador(String nombre) {
 
         this.jugadores.add(new Jugador(nombre));
-        notificarObservadores(new Evento(TipoEvento.AGREGUEJUGADOR));
+        notificar(new Evento(TipoEvento.AGREGUEJUGADOR));
     }
 
     //repartir privado
@@ -109,8 +110,8 @@ public class Mesa extends ObservableRemoto implements IMesa {
         this.pozo.agregar(this.mazo.robar());
     }
 
-    @Override
-    public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego) throws RemoteException{
+
+    public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego) {
         //va a haber rondas que va a bajar 2 juegos pero que las rondas TODO en las que hay 3 juegos, no pueda bajar 2
         Juego juego1 = turno.bajarJuego(primerJuego);
         Juego juego2 = turno.bajarJuego(segundoJuego);
@@ -118,8 +119,8 @@ public class Mesa extends ObservableRemoto implements IMesa {
         this.juegosEnMesa.add(juego2);
     }
 
-    @Override
-    public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego, ArrayList<Carta> terecerJuego) throws RemoteException{
+
+    public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego, ArrayList<Carta> terecerJuego) {
         //va a haber rondas q va a bajar 3 juegos
         Juego juego1 =turno.bajarJuego(primerJuego);
         Juego juego2 = turno.bajarJuego(segundoJuego);
@@ -129,26 +130,26 @@ public class Mesa extends ObservableRemoto implements IMesa {
         this.juegosEnMesa.add(juego3);
     }
 
-    @Override
-    public void ubicarCarta(int pos, Juego juego)  throws RemoteException{
+
+    public void ubicarCarta(int pos, Juego juego)  {
         turno.ubicar(pos,juego);  // le paso la posicion de la carta a ubicar y el juego en donde ubicarlo
         //TODO va a notificar para que la vista muestre
     }
 
-    @Override
-    public void ubicarPorMono(int pos, Juego juego) throws RemoteException{
+
+    public void ubicarPorMono(int pos, Juego juego) {
         turno.ubicar(pos,juego);
     }
 
-    @Override
-    public void descartar(int pos) throws RemoteException{
+
+    public void descartar(int pos) {
         this.turno.descartar(pos, this.pozo);
         //notificar(new Evento.chequearcartas));
         terminarTurno();
     }
 
-    @Override
-    public void robarDelPozo() throws RemoteException{
+
+    public void robarDelPozo() {
         //chequear que no roben mas de una carta
         this.turno.robar(this.pozo);
         this.yaRobo = true;
@@ -160,30 +161,30 @@ public class Mesa extends ObservableRemoto implements IMesa {
             //en este momento los jugadores no se pueden descartar mas cartas(solo ubicar)
             this.jugadorATerminar = poll;
             this.turno = poll;
-            notificarObservadores(new Evento(TipoEvento.ULTIMARONDA));
+            notificar(new Evento(TipoEvento.ULTIMARONDA));
         }
         this.jugadores.add(turno);
         this.turno = poll;
         this.yaRobo = false;
-        notificarObservadores(new Evento(TipoEvento.CAMBIOTURNO));
+        notificar(new Evento(TipoEvento.CAMBIOTURNO));
 
     }
 
-    @Override
+
     public void saltarTurno(){
         //se va a invocar cuando alla ubicado sus cartas y toque el boton(o cuando no tenga nada para ubicar y lo toque)
         Jugador poll = this.jugadores.poll();
         if (poll == this.jugadorATerminar){
             //si dio la vuelta(pasaron todos) llamo a la funcion para terminar la ronda
             finRonda();
-            notificarObservadores(new Evento(TipoEvento.FINRONDA));
+            notificar(new Evento(TipoEvento.FINRONDA));
         }
         this.turno = poll;
         this.jugadores.add(poll);
     }
 
-    @Override
-    public void robarDelMazo() throws RemoteException{
+
+    public void robarDelMazo() {
         //chequear que no me roben mas de una carta
         turno.robar(this.mazo);
         this.yaRobo = true;
@@ -192,26 +193,26 @@ public class Mesa extends ObservableRemoto implements IMesa {
 
     private void interrumpir(){
         //me fijo ordenadamente si algun jugador quiere robar el pozo
-        notificarObservadores(new Evento(TipoEvento.PAUSAJUEGO));
+        notificar(new Evento(TipoEvento.PAUSAJUEGO));
         if (this.jugadores.peek() == turno){
             this.jugadores.add(this.jugadores.poll());
-            notificarObservadores(new Evento(TipoEvento.REANUDARJUEGO));
+            notificar(new Evento(TipoEvento.REANUDARJUEGO));
         }else{
             Jugador player = this.jugadores.poll();
             this.jugadores.add(player);
             //hacer TOString en jugador
-            notificarObservadores(new Evento(TipoEvento.PREGUNTARROBARPOZO,player.toString()));
+            notificar(new Evento(TipoEvento.PREGUNTARROBARPOZO,player.toString()));
         }
     }
 
-    @Override
-    public void respuestaRobarPozo(boolean respuesta, String jugador) throws RemoteException {
+
+    public void respuestaRobarPozo(boolean respuesta, String jugador)  {
         //el controlador pasa un string con el nombre del jugador y busca en la lista dicho jugador para no perder encapsulamietno(correcion de santi :))
         Jugador jugaux = buscarjugador(jugador);
         if (respuesta){
             jugaux.robarFueraDeTurno(this.mazo,this.pozo);
             //que termine una vez q robo
-            notificarObservadores(new Evento(TipoEvento.REANUDARJUEGO));
+            notificar(new Evento(TipoEvento.REANUDARJUEGO));
         }else{
             interrumpir();
         }
@@ -255,13 +256,21 @@ public class Mesa extends ObservableRemoto implements IMesa {
     }
 
     @Override
-    public void notificarObservadores(Object arg){
+    public void notificar(Evento evento){
         for (IObservador obser : this.observadores){
-            obser.update((Evento)arg);
+            obser.update(evento);
         }
     }
 
 
+    @Override
+    public void agregarObservador(IObservador observador) {
 
+    }
+
+    @Override
+    public void eliminarObservador(IObservador observador) {
+
+    }
 
 }

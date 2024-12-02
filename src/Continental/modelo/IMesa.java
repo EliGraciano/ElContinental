@@ -1,43 +1,44 @@
 package Continental.modelo;
 
+import Continental.utilidades.IObservable;
 import ar.edu.unlu.rmimvc.observer.IObservableRemoto;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public interface IMesa extends IObservableRemoto {
+public interface IMesa extends IObservable {
     String getTurno() throws RemoteException;
 
     // que reciba un numero (cantidad de jugadores) y en base a este decida cuantos mazos crear
-    boolean canEmpezarRonda() throws RemoteException;
+    boolean canEmpezarRonda() ;
 
-    boolean canAgregarJugador() throws RemoteException;
+    boolean canAgregarJugador() ;
 
-    boolean canBajar2Juegos() throws RemoteException;
+    boolean canBajar2Juegos() ;
 
-    boolean canBajar3Juegos() throws RemoteException;
+    boolean canBajar3Juegos() ;
 
-    void iniciarRonda() throws RemoteException;
+    void iniciarRonda() ;
 
-    void altaJugador(String nombre) throws RemoteException;
+    void altaJugador(String nombre) ;
 
-    void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego) throws RemoteException;
+    void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego) ;
 
-    void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego, ArrayList<Carta> terecerJuego) throws RemoteException;
+    void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego, ArrayList<Carta> terecerJuego) ;
 
-    void ubicarCarta(int pos, Juego juego) throws RemoteException;
+    void ubicarCarta(int pos, Juego juego) ;
 
-    void ubicarPorMono(int pos, Juego juego) throws RemoteException;
+    void ubicarPorMono(int pos, Juego juego) ;
 
-    void descartar(int pos) throws RemoteException;
+    void descartar(int pos) ;
 
-    void robarDelPozo() throws RemoteException;
+    void robarDelPozo() ;
 
     void saltarTurno();
 
-    void robarDelMazo() throws RemoteException;
+    void robarDelMazo() ;
 
-    void respuestaRobarPozo(boolean respuesta, String jugador) throws RemoteException;
+    void respuestaRobarPozo(boolean respuesta, String jugador) ;
 
-    void notificarObservadores(Object arg);
+    void notificar(Evento evento);
 }
