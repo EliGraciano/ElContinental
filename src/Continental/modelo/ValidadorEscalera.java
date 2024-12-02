@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class ValidadorEscalera implements IValidador{
-//TODO REHACER LA LOGICA DE NUEVO, ESTA MAL
     @Override
     public boolean esValida(ArrayList<Carta> cartas){
         //hay que parametrizar la cantidad mínima de cartas.
@@ -43,20 +42,6 @@ public class ValidadorEscalera implements IValidador{
         } else return true;
     }
 
-    private void ordenarCartas(ArrayList<Carta> cartas){
-        cartas.sort(Comparator.comparingInt(Carta::getValor));
-    }
-
-    private int contadorMonos(ArrayList<Carta> cartas){
-        int cont = 0;
-        for (Carta carta : cartas){
-            if (carta.isPalo(Palo.MONO)){
-                cont++;
-            }
-        }
-        return cont;
-    }
-
     private boolean todasDelMismoPalo(ArrayList<Carta> cartas) {
         Palo paloInicial = null;
         for (Carta carta : cartas) {
@@ -73,32 +58,3 @@ public class ValidadorEscalera implements IValidador{
     }
 
 }
-//// Verificar que la escalera tenga al menos 4 cartas y que todas sean del mismo palo
-//        if (cartas.size() < 4 || !todasDelMismoPalo(cartas)) {
-//        return false;
-//        }
-//ArrayList<Carta> copiaCartas = (ArrayList<Carta>) cartas.clone();
-//ordenarCartas(copiaCartas);
-//int monos = contadorMonos(copiaCartas);
-//
-//        for (int i = 0; i < copiaCartas.size() - 1; i++) {
-//Carta cartaActual = copiaCartas.get(i);
-//Carta cartaSiguiente = copiaCartas.get(i + 1);
-//
-//// Si ambas cartas son monos, las tratamos como huecos consecutivos
-//            if (cartaActual.isPalo(Palo.MONO) && cartaSiguiente.isPalo(Palo.MONO)) {
-//        continue; // Dos monos seguidos no invalidan automáticamente la escalera
-//        }
-//
-//        if (!cartaActual.isPalo(Palo.MONO) && !cartaSiguiente.isPalo(Palo.MONO)) {
-//int diferencia = cartaSiguiente.getValor() - cartaActual.getValor();
-//                if (diferencia > 1) {
-//monos -= (diferencia - 1); // Usar monos para rellenar
-//        if (monos < 0) {
-//        return false; // No hay suficientes monos para rellenar el hueco
-//        }
-//        }
-//        }
-//        }
-//        // Si quedan monos al final pero no se usaron en la lógica, seguimos validando
-//        return monos >= 0;

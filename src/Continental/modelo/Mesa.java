@@ -30,7 +30,7 @@ public class Mesa implements IObservable {
 
     private ArrayList<IObservador> observadores;
 
-    private boolean yaRobo;
+    private boolean yaRobo; //centinela que si es true, la vista ya no le apague el boton de robar
 
 
     public Mesa() {
@@ -59,13 +59,9 @@ public class Mesa implements IObservable {
     }
 
 
-    public boolean canBajar2Juegos() {
-        return rondaActual.getJuegosABajar() == 2;
-    }
-
-
-    public boolean canBajar3Juegos() {
-        return rondaActual.getJuegosABajar() == 3;
+    public int getJuegosABajar(){
+        //en base al numero de ronda se podra utilizar una de las 2 opcionas para bajar
+        return (nroRondaActual <=3) ? 2 : 3;
     }
 
 
@@ -111,7 +107,7 @@ public class Mesa implements IObservable {
     }
 
 
-    public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego) {
+    public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego) throws IllegalArgumentException{
         //va a haber rondas que va a bajar 2 juegos pero que las rondas TODO en las que hay 3 juegos, no pueda bajar 2
         Juego juego1 = turno.bajarJuego(primerJuego);
         Juego juego2 = turno.bajarJuego(segundoJuego);
@@ -120,7 +116,7 @@ public class Mesa implements IObservable {
     }
 
 
-    public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego, ArrayList<Carta> terecerJuego) {
+    public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego, ArrayList<Carta> terecerJuego) throws IllegalArgumentException{
         //va a haber rondas q va a bajar 3 juegos
         Juego juego1 =turno.bajarJuego(primerJuego);
         Juego juego2 = turno.bajarJuego(segundoJuego);
@@ -131,28 +127,44 @@ public class Mesa implements IObservable {
     }
 
 
-    public void ubicarCarta(int pos, Juego juego)  {
-        turno.ubicar(pos,juego);  // le paso la posicion de la carta a ubicar y el juego en donde ubicarlo
-        //TODO va a notificar para que la vista muestre
+    public void ubicarCarta(int pos, Juego juego) throws IllegalStateException {
+        try {
+            turno.ubicar(pos, juego); // Operación que podría fallar
+            // Notificar a la vista para que actualice
+            notificar(new Evento(TipoEvento.CARTAUBICADA));
+        } catch (IllegalArgumentException e) {
+            // Relanzar con un mensaje más descriptivo
+            throw new IllegalStateException("Error al ubicar la carta en el juego: posición o juego inválido.", e);
+        }
     }
 
 
-    public void ubicarPorMono(int pos, Juego juego) {
-        turno.ubicar(pos,juego);
+    public void ubicarPorMono(int pos, Juego juego) throws IllegalStateException {
+        try {
+            turno.ubicar(pos, juego); // Operación que podría fallar
+            // Notificar a la vista para que actualice
+            notificar(new Evento(TipoEvento.CARTAUBICADA));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Error al ubicar el comodín en el juego: posición o juego inválido.", e);
+        }
     }
 
 
     public void descartar(int pos) {
         this.turno.descartar(pos, this.pozo);
-        //notificar(new Evento.chequearcartas));
+        notificar(new Evento(TipoEvento.CARTADESCARTADA));
         terminarTurno();
     }
 
 
-    public void robarDelPozo() {
-        //chequear que no roben mas de una carta
-        this.turno.robar(this.pozo);
-        this.yaRobo = true;
+    public void robarDelPozo() throws IllegalStateException {
+        try {
+            //chequear que no roben mas de una carta
+            this.turno.robar(this.pozo);
+            this.yaRobo = true;
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException("el pozo no tiene cartas.", e);
+        }
     }
 
     private void terminarTurno(){

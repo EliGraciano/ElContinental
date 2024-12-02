@@ -51,7 +51,7 @@ public class Mano extends ConjuntoDeCartas {
         if (validador.esValida(cartas)){
             return new Tercia(cartas);
         }
-        return null;
+        throw new IllegalArgumentException("Las cartas no forman una combinación válida.");
     }
 
     public void ubicar(int pos,Juego juego){

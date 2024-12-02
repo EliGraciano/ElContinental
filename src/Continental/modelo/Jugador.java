@@ -92,7 +92,7 @@ public class Jugador {
     }
 
 
-    public Juego bajarJuego(ArrayList<Carta> cartas){
+    public Juego bajarJuego(ArrayList<Carta> cartas) throws IllegalArgumentException{
         // bajo el juego
         Juego juego = this.mano.bajarJuego(cartas);
         this.setJuegoBajado(true);
