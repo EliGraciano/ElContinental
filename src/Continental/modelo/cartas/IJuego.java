@@ -1,8 +1,6 @@
-package Continental.modelo;
+package Continental.modelo.cartas;
 
-import java.util.ArrayList;
-
-public interface Juego {
+public interface IJuego {
 
     public boolean acomodar(Carta carta);
 

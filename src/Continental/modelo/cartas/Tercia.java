@@ -1,8 +1,8 @@
-package Continental.modelo;
+package Continental.modelo.cartas;
 
 import java.util.ArrayList;
 
-public class Tercia extends ConjuntoDeCartas implements Juego{
+public class Tercia extends ConjuntoDeCartas implements IJuego {
 
     public Tercia(ArrayList<Carta> cartas) {
         this.cartas = cartas;

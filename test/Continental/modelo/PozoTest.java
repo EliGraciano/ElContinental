@@ -1,9 +1,10 @@
 package Continental.modelo;
 
+import Continental.modelo.cartas.Carta;
+import Continental.modelo.cartas.Palo;
+import Continental.modelo.cartas.Pozo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PozoTest {
 
@@ -17,7 +18,7 @@ class PozoTest {
 
     @Test
     void agregar() {
-        this.pozo.agregar(new Carta(10,Palo.DIAMANTE));
+        this.pozo.agregar(new Carta(10, Palo.DIAMANTE));
         this.pozo.agregar(new Carta(9,Palo.DIAMANTE));
         this.pozo.agregar(new Carta(8,Palo.DIAMANTE));
     }

@@ -1,10 +1,14 @@
-package Continental.modelo;
+package Continental.modelo.juego;
 
+import Continental.modelo.eventos.Evento;
+import Continental.modelo.eventos.TipoEvento;
+import Continental.modelo.cartas.Carta;
+import Continental.modelo.cartas.IJuego;
+import Continental.modelo.cartas.Mazo;
+import Continental.modelo.cartas.Pozo;
 import Continental.utilidades.IObservable;
 import Continental.utilidades.IObservador;
-import ar.edu.unlu.rmimvc.observer.ObservableRemoto;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -18,7 +22,7 @@ public class Mesa implements IObservable {
 
     private Queue<Jugador> jugadores;
 
-    private ArrayList<Juego> juegosEnMesa;
+    private ArrayList<IJuego> juegosEnMesa;
 
     private Ronda rondaActual;
 
@@ -30,7 +34,7 @@ public class Mesa implements IObservable {
 
     private ArrayList<IObservador> observadores;
 
-    private boolean yaRobo; //centinela que si es true, la vista ya no le apague el boton de robar
+    private boolean yaRobo; //centinela que si es true, mediante el controlador la vista le apague el boton de robar al turno
 
 
     public Mesa() {
@@ -49,13 +53,12 @@ public class Mesa implements IObservable {
     public boolean canEmpezarRonda() {
         //le devuelve a la vista si se puede empezar  o no la ronda para poder poenr le button en enabled
         return this.jugadores.size() >= 2;
-
     }
 
 
     public boolean canAgregarJugador() {
         //le devuelve a la vista si se puede seguir agregando jugadores
-        return this.jugadores.size() < 8;
+        return this.jugadores.size() <= 8;
     }
 
 
@@ -91,10 +94,25 @@ public class Mesa implements IObservable {
     }
 
 
-    public void altaJugador(String nombre) {
+    private boolean jugadorRepetido(String nombre){
+        for (Jugador player : this.jugadores){
+            if (player.getNombre().equals(nombre)){
+                return false;
+            }
+        }
+        return true;
+    }
 
+    public void altaJugador(String nombre) throws Exception{
+        //TODO agregar que si el nombre del jugador ya esta tambien crashee
+        if (nombre.isBlank() || nombre.isEmpty() ){
+            throw new Exception("nombre invalido");
+        }
+        if (!jugadorRepetido(nombre)){
+            throw new Exception("jugador ya registrado");
+        }
         this.jugadores.add(new Jugador(nombre));
-        notificar(new Evento(TipoEvento.AGREGUEJUGADOR));
+        notificar(new Evento(TipoEvento.JUGADORAGREGADO));
     }
 
     //repartir privado
@@ -109,8 +127,8 @@ public class Mesa implements IObservable {
 
     public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego) throws IllegalArgumentException{
         //va a haber rondas que va a bajar 2 juegos pero que las rondas TODO en las que hay 3 juegos, no pueda bajar 2
-        Juego juego1 = turno.bajarJuego(primerJuego);
-        Juego juego2 = turno.bajarJuego(segundoJuego);
+        IJuego juego1 = turno.bajarJuego(primerJuego);
+        IJuego juego2 = turno.bajarJuego(segundoJuego);
         this.juegosEnMesa.add(juego1);
         this.juegosEnMesa.add(juego2);
     }
@@ -118,35 +136,27 @@ public class Mesa implements IObservable {
 
     public void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego, ArrayList<Carta> terecerJuego) throws IllegalArgumentException{
         //va a haber rondas q va a bajar 3 juegos
-        Juego juego1 =turno.bajarJuego(primerJuego);
-        Juego juego2 = turno.bajarJuego(segundoJuego);
-        Juego juego3 = turno.bajarJuego(terecerJuego);
+        IJuego juego1 =turno.bajarJuego(primerJuego);
+        IJuego juego2 = turno.bajarJuego(segundoJuego);
+        IJuego juego3 = turno.bajarJuego(terecerJuego);
         this.juegosEnMesa.add(juego1);
         this.juegosEnMesa.add(juego2);
         this.juegosEnMesa.add(juego3);
     }
 
 
-    public void ubicarCarta(int pos, Juego juego) throws IllegalStateException {
-        try {
-            turno.ubicar(pos, juego); // Operación que podría fallar
-            // Notificar a la vista para que actualice
-            notificar(new Evento(TipoEvento.CARTAUBICADA));
-        } catch (IllegalArgumentException e) {
-            // Relanzar con un mensaje más descriptivo
-            throw new IllegalStateException("Error al ubicar la carta en el juego: posición o juego inválido.", e);
-        }
+    public void ubicarCarta(int pos, IJuego juego) throws IllegalArgumentException {
+        turno.ubicar(pos, juego); // Operación que podría fallar
+        // Notificar al controlador para que actualice el estado del a vista
+        notificar(new Evento(TipoEvento.CARTAUBICADA));
     }
 
 
-    public void ubicarPorMono(int pos, Juego juego) throws IllegalStateException {
-        try {
-            turno.ubicar(pos, juego); // Operación que podría fallar
-            // Notificar a la vista para que actualice
-            notificar(new Evento(TipoEvento.CARTAUBICADA));
-        } catch (IllegalArgumentException e) {
-            throw new IllegalStateException("Error al ubicar el comodín en el juego: posición o juego inválido.", e);
-        }
+    public void ubicarPorMono(int pos, IJuego juego) throws IllegalArgumentException {
+        turno.ubicar(pos, juego); // Operación que podría fallar
+        // Notificar a la vista para que actualice
+        notificar(new Evento(TipoEvento.CARTAUBICADA));
+
     }
 
 
@@ -158,13 +168,10 @@ public class Mesa implements IObservable {
 
 
     public void robarDelPozo() throws IllegalStateException {
-        try {
-            //chequear que no roben mas de una carta
-            this.turno.robar(this.pozo);
-            this.yaRobo = true;
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException("el pozo no tiene cartas.", e);
-        }
+        //chequear que no roben mas de una carta
+        this.turno.robar(this.pozo);
+        this.yaRobo = true;
+
     }
 
     private void terminarTurno(){
@@ -276,13 +283,21 @@ public class Mesa implements IObservable {
 
 
     @Override
-    public void agregarObservador(IObservador observador) {
-
+    public void agregarObservador(IObservador observador) throws  Exception  {
+        if (this.observadores.contains(observador)){
+            throw new Exception("no se pudo agregar el observador");
+        } else {
+            this.observadores.add(observador);
+        }
     }
 
     @Override
-    public void eliminarObservador(IObservador observador) {
-
+    public void eliminarObservador(IObservador observador)throws  Exception {
+        if (!this.observadores.contains(observador)){
+            throw new Exception("no se pudo eliminar el observador");
+        } else {
+            this.observadores.remove(observador);
+        }
     }
 
 }

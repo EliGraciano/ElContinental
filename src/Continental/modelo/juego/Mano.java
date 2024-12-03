@@ -1,4 +1,6 @@
-package Continental.modelo;
+package Continental.modelo.juego;
+
+import Continental.modelo.cartas.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,19 +21,14 @@ public class Mano extends ConjuntoDeCartas {
         this.cartas.add(carta);
     }
 
-    public Juego bajarJuego(ArrayList<Carta> cartas){
+    public IJuego bajarJuego(ArrayList<Carta> cartas) throws IllegalArgumentException{
         // devuelvo el conjunto de cartas a bajar y las saco de la mano
         // TODO cambiar por una excepcion el if
-        Juego juego = combinacionValida(cartas);
-        if (juego != null) {
-            //ArrayList<Carta> cartasBajadas = new ArrayList<>();
-            for (Carta carta : cartas) {
-                //cartasBajadas.add(carta);
-                this.cartas.remove(carta);
-            }
-            return juego;
+        IJuego juego = combinacionValida(cartas);
+        for (Carta carta : cartas) {
+            this.cartas.remove(carta);
         }
-        else return null;
+        return juego;
     }
 
     public void ordenar() {
@@ -39,11 +36,10 @@ public class Mano extends ConjuntoDeCartas {
         this.cartas.sort(Comparator.comparingInt(Carta::getValor));
     }
 
-    private Juego combinacionValida(ArrayList<Carta> cartas){
+    private IJuego combinacionValida(ArrayList<Carta> cartas){
         // creo una instancia de validador para chequear que el juego a bajar sea valido
-        // (y devuelvo una isntancia dle juego creado(para ponerla en la mesa))
+        // (y devuelvo una instancia del juego creado(para ponerla en la mesa))
         IValidador validador = new ValidadorEscalera();
-
         if (validador.esValida(cartas)){
             return new Escalera(cartas);
         }
@@ -54,7 +50,7 @@ public class Mano extends ConjuntoDeCartas {
         throw new IllegalArgumentException("Las cartas no forman una combinación válida.");
     }
 
-    public void ubicar(int pos,Juego juego){
+    public void ubicar(int pos, IJuego juego) throws IndexOutOfBoundsException{
         //TODO aca recibo un booleano que podria usar para indicar si se ubico con exito o no
         Carta cartaselec = this.cartas.get(pos);
         if (juego.acomodar(cartaselec)){
@@ -62,7 +58,7 @@ public class Mano extends ConjuntoDeCartas {
         }
     }
 
-    public void ubicarPorMono(int pos,Juego juego){
+    public void ubicarPorMono(int pos, IJuego juego){
         Carta cartaselec = this.cartas.get(pos);
         Carta cartaCambiada = juego.cambiarPorMono(cartaselec);
         if (cartaCambiada != null){

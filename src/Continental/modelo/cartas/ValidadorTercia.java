@@ -1,8 +1,8 @@
-package Continental.modelo;
+package Continental.modelo.cartas;
 
 import java.util.ArrayList;
 
-public class ValidadorTercia implements IValidador{
+public class ValidadorTercia implements IValidador {
 
     @Override
     public boolean esValida(ArrayList<Carta> cartas) {

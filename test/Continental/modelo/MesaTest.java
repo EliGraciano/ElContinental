@@ -1,16 +1,19 @@
 package Continental.modelo;
 
+import Continental.modelo.cartas.Carta;
+import Continental.modelo.cartas.Palo;
+import Continental.modelo.juego.Mesa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.rmi.RemoteException;
+
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MesaTest {
 
-    IMesa mesa;
+    Mesa mesa;
 
     @BeforeEach
     void setUp(){
@@ -19,11 +22,20 @@ class MesaTest {
     }
 
     @Test
-    void comenzarJuego() throws RemoteException {
-        mesa.altaJugador("Elias");
+    void comenzarJuego()  {
+
+        try {
+            mesa.altaJugador("Elias");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         assertEquals(false, mesa.canEmpezarRonda());
         assertEquals(true, mesa.canAgregarJugador());
-        mesa.altaJugador("Nicolas");
+        try {
+            mesa.altaJugador("Nicolas");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         assertEquals(true, mesa.canEmpezarRonda());
         mesa.iniciarRonda();
         mesa.robarDelMazo();
@@ -39,7 +51,7 @@ class MesaTest {
         mesa.robarDelMazo();
         mesa.descartar(0);
         ArrayList<Carta> juego = new ArrayList<>();
-        juego.add(new Carta(1,Palo.DIAMANTE));
+        juego.add(new Carta(1, Palo.DIAMANTE));
         juego.add(new Carta(1,Palo.DIAMANTE));
         juego.add(new Carta(1,Palo.PICA));
         ArrayList<Carta> juego2 = new ArrayList<>();

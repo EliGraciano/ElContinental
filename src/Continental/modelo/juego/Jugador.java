@@ -1,4 +1,9 @@
-package Continental.modelo;
+package Continental.modelo.juego;
+
+import Continental.modelo.cartas.IJuego;
+import Continental.modelo.cartas.Carta;
+import Continental.modelo.cartas.Mazo;
+import Continental.modelo.cartas.Pozo;
 
 import java.util.ArrayList;
 
@@ -92,9 +97,9 @@ public class Jugador {
     }
 
 
-    public Juego bajarJuego(ArrayList<Carta> cartas) throws IllegalArgumentException{
+    public IJuego bajarJuego(ArrayList<Carta> cartas) throws IllegalArgumentException{
         // bajo el juego
-        Juego juego = this.mano.bajarJuego(cartas);
+        IJuego juego = this.mano.bajarJuego(cartas);
         this.setJuegoBajado(true);
         return juego;
     }
@@ -105,11 +110,11 @@ public class Jugador {
         this.mano.ordenar();
     }
 
-    public void ubicar(int pos,Juego juego){
+    public void ubicar(int pos, IJuego juego){
         this.mano.ubicar(pos,juego);
     }
 
-    public void ubicarPorMono(int pos,Juego juego){
+    public void ubicarPorMono(int pos, IJuego juego){
         this.mano.ubicarPorMono(pos, juego);
     }
 

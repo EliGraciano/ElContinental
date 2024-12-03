@@ -1,7 +1,9 @@
-package Continental.modelo;
+package Continental.modelo.juego;
 
+import Continental.modelo.cartas.Carta;
+import Continental.modelo.cartas.IJuego;
+import Continental.modelo.eventos.Evento;
 import Continental.utilidades.IObservable;
-import ar.edu.unlu.rmimvc.observer.IObservableRemoto;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -26,9 +28,9 @@ public interface IMesa extends IObservable {
 
     void bajarJuegos(ArrayList<Carta> primerJuego, ArrayList<Carta> segundoJuego, ArrayList<Carta> terecerJuego) ;
 
-    void ubicarCarta(int pos, Juego juego) ;
+    void ubicarCarta(int pos, IJuego juego) ;
 
-    void ubicarPorMono(int pos, Juego juego) ;
+    void ubicarPorMono(int pos, IJuego juego) ;
 
     void descartar(int pos) ;
 

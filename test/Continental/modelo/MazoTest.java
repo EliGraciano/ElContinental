@@ -1,11 +1,9 @@
 package Continental.modelo;
 
+import Continental.modelo.cartas.Carta;
+import Continental.modelo.cartas.Mazo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.annotation.processing.SupportedAnnotationTypes;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 

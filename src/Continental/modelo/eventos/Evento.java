@@ -1,4 +1,4 @@
-package Continental.modelo;
+package Continental.modelo.eventos;
 
 public class Evento {
 

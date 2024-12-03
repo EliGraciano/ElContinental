@@ -1,5 +1,5 @@
 package Continental.utilidades;
-import Continental.modelo.Evento;
+import Continental.modelo.eventos.Evento;
 
 public interface IObservador {
 

@@ -1,12 +1,12 @@
 package Continental.utilidades;
 
-import Continental.modelo.Evento;
+import Continental.modelo.eventos.Evento;
 
 public interface IObservable {
 
-    public void agregarObservador(IObservador observador);
+    public void agregarObservador(IObservador observador) throws  Exception ;
 
-    public void eliminarObservador(IObservador observador);
+    public void eliminarObservador(IObservador observador) throws  Exception ;
 
     public void notificar(Evento evento);
 

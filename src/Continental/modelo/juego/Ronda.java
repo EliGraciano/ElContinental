@@ -1,6 +1,4 @@
-package Continental.modelo;
-
-import java.util.ArrayList;
+package Continental.modelo.juego;
 
 public class Ronda {
     private int cartasADar;

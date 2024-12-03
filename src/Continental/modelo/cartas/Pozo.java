@@ -1,7 +1,6 @@
-package Continental.modelo;
+package Continental.modelo.cartas;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Pozo extends ConjuntoDeCartas{
 

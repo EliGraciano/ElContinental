@@ -1,5 +1,6 @@
 package Continental.modelo;
 
+import Continental.modelo.cartas.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +25,7 @@ class CombinacionesTest {
 
 
         //proyectoE.add(new Carta(1,Palo.DIAMANTE));
-        proyectoE.add(new Carta(50,Palo.MONO));
+        proyectoE.add(new Carta(50, Palo.MONO));
         proyectoE.add(new Carta(50,Palo.MONO));
         //proyectoE.add(new Carta(2,Palo.DIAMANTE));
         proyectoE.add(new Carta(3,Palo.DIAMANTE));
@@ -43,7 +44,7 @@ class CombinacionesTest {
     @Test
     void comprobarValidaciones() {
         assertEquals(true,iValidadorE.esValida(proyectoE));
-        Juego escalera = new Escalera(proyectoE);
+        IJuego escalera = new Escalera(proyectoE);
 
 
 

@@ -1,4 +1,4 @@
-package Continental.modelo;
+package Continental.modelo.cartas;
 
 import java.util.Objects;
 

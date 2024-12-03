@@ -1,10 +1,8 @@
-package Continental.modelo;
+package Continental.modelo.cartas;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
-public class Escalera  extends ConjuntoDeCartas implements Juego{
+public class Escalera  extends ConjuntoDeCartas implements IJuego {
 
     public Escalera(ArrayList<Carta> cartas) {
         this.cartas = cartas;

@@ -1,4 +1,6 @@
-package Continental.modelo;
+package Continental.modelo.cartas;
+
+import Continental.modelo.juego.Mano;
 
 import java.util.ArrayList;
 import java.util.Collections;

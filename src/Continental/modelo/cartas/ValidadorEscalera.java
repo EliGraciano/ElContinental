@@ -1,10 +1,8 @@
-package Continental.modelo;
+package Continental.modelo.cartas;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
-public class ValidadorEscalera implements IValidador{
+public class ValidadorEscalera implements IValidador {
     @Override
     public boolean esValida(ArrayList<Carta> cartas){
         //hay que parametrizar la cantidad mínima de cartas.
