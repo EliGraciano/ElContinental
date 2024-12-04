@@ -1,4 +1,4 @@
-package Continental.utilidades;
+package Continental.interfaces;
 import Continental.modelo.eventos.Evento;
 
 public interface IObservador {

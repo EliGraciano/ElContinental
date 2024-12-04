@@ -8,11 +8,17 @@ public class Pozo extends ConjuntoDeCartas{
         this.cartas = new ArrayList<>();
     }
 
+
+    public String getCartaTope(){
+        return this.cartas.getFirst().toString();
+    }
+
     public Carta robar(){
         Carta cartarobada = this.cartas.getLast();
         this.cartas.remove(this.cartas.getLast());
         return cartarobada;
     }
+
 
     public void agregar(Carta carta){
         this.cartas.add(carta);

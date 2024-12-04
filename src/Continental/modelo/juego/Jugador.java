@@ -65,7 +65,7 @@ public class Jugador {
         this.puntos += puntosSumados;
     }
 
-    public void descartar(int pos, Pozo pozo){
+    public void descartar(int pos, Pozo pozo) throws IndexOutOfBoundsException {
         // tira al pozo que se le pasa la carta elegida
         Carta cartaDescarte = this.mano.descartar(pos);
         pozo.agregar(cartaDescarte);
@@ -122,4 +122,9 @@ public class Jugador {
     public String toString() {
         return this.nombre;
     }
+
+    public ArrayList<String> cartasManoToString(){
+        return this.mano.manoToString();
+    }
+
 }

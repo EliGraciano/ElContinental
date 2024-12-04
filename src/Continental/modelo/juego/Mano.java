@@ -11,7 +11,7 @@ public class Mano extends ConjuntoDeCartas {
         this.cartas = cartas;
     }
 
-    public Carta descartar(int pos){
+    public Carta descartar(int pos) throws IndexOutOfBoundsException{
         Carta cartaselec = this.cartas.get(pos);
         this.cartas.remove(pos);
         return cartaselec;
@@ -73,6 +73,14 @@ public class Mano extends ConjuntoDeCartas {
             carta.getPuntos(puntos);
         }
         return puntos;
+    }
+
+    public ArrayList<String> manoToString(){
+        ArrayList<String> manoCartas = new ArrayList<>();
+        for (Carta carta : this.cartas){
+            manoCartas.add(carta.toString());
+        }
+        return manoCartas;
     }
 
 

@@ -6,8 +6,8 @@ import Continental.modelo.cartas.Carta;
 import Continental.modelo.cartas.IJuego;
 import Continental.modelo.cartas.Mazo;
 import Continental.modelo.cartas.Pozo;
-import Continental.utilidades.IObservable;
-import Continental.utilidades.IObservador;
+import Continental.interfaces.IObservable;
+import Continental.interfaces.IObservador;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -67,6 +67,13 @@ public class Mesa implements IObservable {
         return (nroRondaActual <=3) ? 2 : 3;
     }
 
+    public String getCartaTopeMazo(){
+        return this.mazo.getCartaTope();
+    }
+
+    public String getCartaTopePozo(){
+        return this.pozo.getCartaTope();
+    }
 
     public int getNroRondaActual(){
         return this.nroRondaActual;
@@ -168,7 +175,7 @@ public class Mesa implements IObservable {
     }
 
 
-    public void descartar(int pos) {
+    public void descartar(int pos) throws IndexOutOfBoundsException {
         this.turno.descartar(pos, this.pozo);
         notificar(new Evento(TipoEvento.CARTADESCARTADA));
         terminarTurno();
@@ -192,7 +199,7 @@ public class Mesa implements IObservable {
         this.jugadores.add(turno);
         this.turno = poll;
         this.yaRobo = false;
-        notificar(new Evento(TipoEvento.CAMBIOTURNO));
+        notificar(new Evento(TipoEvento.CAMBIOTURNO,getTurno()));
 
     }
 
@@ -279,6 +286,14 @@ public class Mesa implements IObservable {
     //usar esta funcion para saber si se termino o no se termino la ronda(llamarla despues de cada turno)
     private boolean esFinRonda(){
         return this.turno.getMano().isEmpty() && this.turno.isJuegoBajado();
+    }
+
+    public ArrayList<String> cartasManoJugadorToString(String nombre) throws Exception{
+        for (Jugador player : this.jugadores){
+            player.toString().equals(nombre);
+            return player.cartasManoToString();
+        }
+        throw new Exception("Jugador no encontrado");
     }
 
     @Override

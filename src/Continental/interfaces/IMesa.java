@@ -1,9 +1,8 @@
-package Continental.modelo.juego;
+package Continental.interfaces;
 
 import Continental.modelo.cartas.Carta;
 import Continental.modelo.cartas.IJuego;
 import Continental.modelo.eventos.Evento;
-import Continental.utilidades.IObservable;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;

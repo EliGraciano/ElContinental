@@ -1,4 +1,4 @@
-package Continental.vista;
+package Continental.interfaces;
 
 public interface IVista {
 
@@ -6,4 +6,5 @@ public interface IVista {
 
     void mostrarMensaje(String s);
 
+    void jugarTurno();
 }

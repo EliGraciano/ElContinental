@@ -57,7 +57,10 @@ public class Carta {
 
     @Override
     public String toString() {
-        return "Carta{" +valor + " de " + palo + '}';
+        if (this.isPalo(Palo.MONO)){
+            return "{" + palo + "}";
+        }
+        return  "{" + this.valor + " de " + palo + "}";
     }
 
     @Override
