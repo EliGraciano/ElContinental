@@ -80,18 +80,21 @@ public class Consola extends JFrame implements IVista {
     private void procesarComando(String input) {
         switch (input.trim()){
             case "1" -> {
-                MostrarMensaje("Ingrese su Nombre: ");
+                mostrarMensaje("Ingrese su Nombre: ");
                 setPanelInput("entrada");
             }
             case "2" -> {
 
+            }
+            case "3" -> {
+                iniciarRonda();
             }
             case "0" -> {
                 System.exit(0);
             }
 
             default -> {
-                MostrarMensaje("Opcion Invalida");
+                mostrarMensaje("Opcion Invalida");
                 menuInicio();
             }
 
@@ -106,18 +109,63 @@ public class Consola extends JFrame implements IVista {
     }
 
     @Override
-    public void MostrarMensaje(String s) {
+    public void mostrarMensaje(String s) {
         areaSalida.append(s + "\n");
     }
 
     public void menuInicio(){
         areaSalida.append("------ MENU PRINCIPAL ---------\n" +
-                "------ 1: agregar jugado ------ \n" +
-                "------ 2: ver reglas ---------- \n" +
-                "------ 3: comenzar juego ------ \n" +
-                "------ 0: Salir --------------- \n"
+                            "------ 1: agregar jugado ------ \n" +
+                            "------ 2: ver reglas ---------- \n" +
+                            "------ 3: comenzar juego ------ \n" +
+                            "------ 0: Salir --------------- \n"
         );
         setPanelInput("default");
+    }
+
+    public void menuTurno(){
+        areaSalida.append("------ Tu turno -------\n" +
+                            "------ 1: robar del mazo ------ \n" +
+                            "------ 2: robar del pozo ------ \n" +
+                            "------ 3: bajar juegos -------- \n"
+        );
+        //crear panel para el menu del turno
+        //mostrar mazo y pozo
+    }
+
+    public void menoFueraDeTurno(){
+        areaSalida.append("------ fuera de turno -------\n" +
+                            "------ 1: robar del pozo ------ \n"
+        );
+        // mostrar mazo y pozo
+        //crear panel para el menu de fuera de turno
+    }
+
+    public void menuDescarte(){
+        areaSalida.append("------ Tu turno -------\n" +
+                            "------ Seleccione carta a descartar ------ \n"
+                //mostrar la mano(y esperar un numero que sea el indice)
+        );
+        //crear panel para el menu de fuera de turno
+    }
+
+    public void menoJuegoBajado(){
+        areaSalida.append("------ Tu turno -------\n" +
+                            "----- 1: robar del mazo ------ \n" +
+                            "----- 2: robar del pozo ------ \n" +
+                            "----- 3: ubicar carta -------- \n" +
+                            "----- 4: ubicar carta por mono - \n" +
+                            "----- 5: saltar turno -------- \n"
+        );
+    }
+
+    private void iniciarRonda(){
+        try {
+            controlador.inicarRonda();
+        } catch (Exception e){
+            mostrarMensaje(e.toString());
+            menuInicio();
+        }
     }
 
 
@@ -135,9 +183,16 @@ public class Consola extends JFrame implements IVista {
                 panelInput.add(enviarButtonJugador,BorderLayout.WEST);
                 panelInput.updateUI();
             }
-            case "juego" ->{
+            case "turno" ->{
 
             }
+            case "fueraturno" ->{
+
+            }
+            case "turnodescarte" ->{
+
+            }
+
             default -> {
                 panelInput.removeAll();
                 panelInput.setLayout(new BorderLayout());

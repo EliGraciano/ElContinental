@@ -68,6 +68,11 @@ public class Mesa implements IObservable {
     }
 
 
+    public int getNroRondaActual(){
+        return this.nroRondaActual;
+    }
+
+
     public void iniciarRonda() {
         // TODO si la cantidad de jugadores es igual o menor a 4, poder usar grafica, si es mayor usar vista consola
         if (nroRondaActual < 7) {
@@ -90,7 +95,7 @@ public class Mesa implements IObservable {
         this.jugadores.add(turno);
         this.jugadorATerminar = null;
         repartir();
-        notificar(new Evento(TipoEvento.COMENZOJUEGO));
+        notificar(new Evento(TipoEvento.JUEGOCOMENZADO));
     }
 
 
@@ -106,10 +111,13 @@ public class Mesa implements IObservable {
     public void altaJugador(String nombre) throws Exception{
         //TODO agregar que si el nombre del jugador ya esta tambien crashee
         if (nombre.isBlank() || nombre.isEmpty() ){
-            throw new Exception("nombre invalido");
+            throw new Exception("nombre invalido!");
         }
         if (!jugadorRepetido(nombre)){
-            throw new Exception("jugador ya registrado");
+            throw new Exception("jugador ya registrado!");
+        }
+        if (!canAgregarJugador()){
+            throw new Exception("ya hay 8 jugadores!");
         }
         this.jugadores.add(new Jugador(nombre));
         notificar(new Evento(TipoEvento.JUGADORAGREGADO));
@@ -171,7 +179,6 @@ public class Mesa implements IObservable {
         //chequear que no roben mas de una carta
         this.turno.robar(this.pozo);
         this.yaRobo = true;
-
     }
 
     private void terminarTurno(){

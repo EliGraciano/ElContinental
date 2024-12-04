@@ -10,7 +10,7 @@ public class Controlador implements IObservador {
 
     private final IVista vista;
 
-    private Mesa mesa;
+    private final Mesa mesa;
 
     private VistaJugador vist;
 
@@ -20,7 +20,7 @@ public class Controlador implements IObservador {
         try {
             mesa.agregarObservador(this);
         } catch (Exception e){
-            vista.MostrarMensaje(e.toString());
+            vista.mostrarMensaje(e.toString());
         }
     }
 
@@ -29,7 +29,7 @@ public class Controlador implements IObservador {
     public void update(Evento evento) {
         switch (evento.getTipo()){
             case JUGADORAGREGADO -> {
-                vista.MostrarMensaje("Jugador Agregado con exito!");
+                vista.mostrarMensaje("Jugador Agregado con exito!");
             }
 
         }
@@ -40,7 +40,18 @@ public class Controlador implements IObservador {
         try {
             mesa.altaJugador(input);
         } catch (Exception e){
-            vista.MostrarMensaje(e.toString());
+            vista.mostrarMensaje(e.toString());
+        }
+    }
+
+    public void inicarRonda() throws Exception {
+        if (!mesa.canEmpezarRonda()){
+            throw new Exception("se necesita al menos un jugador mas para comenzar la ronda");
+        } else {
+            mesa.iniciarRonda();
+            String turnoActual = mesa.getTurno();
+            vista.mostrarMensaje("ronda: " + mesa.getNroRondaActual() + " comenzada");
+            vista.mostrarMensaje("turno de: "+turnoActual);
         }
     }
 }

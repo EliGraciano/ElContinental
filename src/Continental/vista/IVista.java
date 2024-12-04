@@ -4,6 +4,6 @@ public interface IVista {
 
     void iniciar();
 
-    void MostrarMensaje(String s);
+    void mostrarMensaje(String s);
 
 }

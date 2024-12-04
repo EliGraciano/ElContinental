@@ -6,11 +6,13 @@ import Continental.vista.consola.Consola;
 
 public class Continental {
     public static void main(String[] args) {
-        Mesa mesa = new Mesa();
-        IVista vista = new Consola();
-        Controlador contraladorJuego = new Controlador(vista);
 
+        IVista vista = new Consola();
+        IVista vista2 = new Consola();
+        Controlador contraladorJuego = new Controlador(vista);
+        Controlador controladorJuego2 = new Controlador(vista2);
         vista.iniciar();
+        vista2.iniciar();
     }
 
 }
