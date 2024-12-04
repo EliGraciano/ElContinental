@@ -24,7 +24,7 @@ public class Controlador implements IObservador {
     public void setModelo(Mesa mesa){
         try {
             this.mesa = mesa;
-            mesa.agregarObservador(this);
+            this.mesa.agregarObservador(this);
         } catch (Exception e) {
              vista.mostrarMensaje(e.toString());
         }

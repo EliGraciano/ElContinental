@@ -9,10 +9,8 @@ public class Continental {
         Mesa mesa1 = new Mesa();
         IVista vista = new Consola();
         IVista vista2 = new Consola();
-        Controlador contraladorJuego = new Controlador(vista);
-        Controlador controladorJuego2 = new Controlador(vista2);
-        contraladorJuego.setModelo(mesa1);
-        controladorJuego2.setModelo(mesa1);
+        vista.setModelo(mesa1);
+        vista2.setModelo(mesa1);
         vista.iniciar();
         vista2.iniciar();
     }

@@ -1,5 +1,7 @@
 package Continental.interfaces;
 
+import Continental.modelo.juego.Mesa;
+
 public interface IVista {
 
     void iniciar();
@@ -7,4 +9,6 @@ public interface IVista {
     void mostrarMensaje(String s);
 
     void jugarTurno();
+
+    void setModelo(Mesa mesa);
 }

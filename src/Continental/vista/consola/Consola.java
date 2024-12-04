@@ -1,7 +1,9 @@
 package Continental.vista.consola;
 
 import Continental.controlador.Controlador;
+import Continental.interfaces.IObservable;
 import Continental.interfaces.IVista;
+import Continental.modelo.juego.Mesa;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,29 +21,8 @@ public class Consola extends JFrame implements IVista {
     private JPanel panelInput;
 
     //entrada del menu
-    private JTextField inputFieldMenu;
-    private JButton enviarButtonMenu;
-
-    //entrada registro jugador
-    private JTextField inputFieldNombreJugador;
-    private JButton enviarButtonJugador;
-
-    //entrada turno del jugador
-    private JTextField inputTurnoJugador; // mostrar array de cartas
-    private JButton enviarButtonTurnoJugador;
-
-    //entrada descarte carta(indice)
-    private JTextField inputDescarteCarta; // mostrar array de cartas
-    private JButton enviarButtonDescarteCarta;
-
-    // entrada fuera de turno
-    private JTextField inputfueraDeTurnoJugador; // mostrar array de cartas
-    private JButton enviarButtonFueraDeTurnoJugador;
-
-    // entrada juego bajado
-    private JTextField inputJuegoBajadoJugador; // mostrar array de cartas
-    private JButton enviarButtonJuegoBajadoJugador;
-
+    private JTextField inputField;
+    private JButton enviarButton;
 
     public Consola() {
         this.controlador = new Controlador(this);
@@ -50,7 +31,8 @@ public class Consola extends JFrame implements IVista {
         setTitle("El Continental");
         setSize(500,400);
         setLayout(new BorderLayout());
-        //SALIDA
+
+        //COLOR
         this.areaSalida = new JTextArea();
         panelSalida = new JScrollPane(areaSalida);
         areaSalida.setBackground(Color.BLACK);
@@ -58,128 +40,127 @@ public class Consola extends JFrame implements IVista {
         areaSalida.setForeground(Color.GREEN);
         add(panelSalida,BorderLayout.CENTER);
 
-        //ENTRADA MENU
+        //Color a los botones
         panelInput = new JPanel();
-        this.enviarButtonMenu = new JButton("Enviar");
-        this.inputFieldMenu = new JTextField();
-        this.inputFieldMenu.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        this.inputFieldMenu.setBackground(Color.BLACK);
-        this.inputFieldMenu.setForeground(Color.GREEN);
+        this.enviarButton = new JButton("Enviar");
+        this.inputField = new JTextField();
+        this.inputField.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        this.inputField.setBackground(Color.BLACK);
+        this.inputField.setForeground(Color.GREEN);
         panelInput.setLayout(new BorderLayout());
-        panelInput.add(enviarButtonMenu,BorderLayout.WEST);
-        panelInput.add(inputFieldMenu,BorderLayout.CENTER);
-
-        //ENTRADA JUGADOR
-        this.inputFieldNombreJugador = new JTextField();
-        this.inputFieldNombreJugador.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        this.inputFieldNombreJugador.setBackground(Color.BLACK);
-        this.inputFieldNombreJugador.setForeground(Color.GREEN);
-        this.enviarButtonJugador = new JButton("Enviar");
-
-        //ENTRADA TURNO JUGADOR
-        this.inputTurnoJugador= new JTextField();
-        this.inputTurnoJugador.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        this.inputTurnoJugador.setBackground(Color.BLACK);
-        this.inputTurnoJugador.setForeground(Color.GREEN);
-        this.enviarButtonTurnoJugador= new JButton("Enviar");
-
-        //ENTRADA TURNO DESCARTE JUGADOR
-        this.inputDescarteCarta= new JTextField();
-        this.inputDescarteCarta.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        this.inputDescarteCarta.setBackground(Color.BLACK);
-        this.inputDescarteCarta.setForeground(Color.GREEN);
-        this.enviarButtonDescarteCarta= new JButton("Enviar");
-
-        //ENTRADA FUERA DE TURNO JUGADOR
-        this.inputfueraDeTurnoJugador= new JTextField();
-        this.inputfueraDeTurnoJugador.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        this.inputfueraDeTurnoJugador.setBackground(Color.BLACK);
-        this.inputfueraDeTurnoJugador.setForeground(Color.GREEN);
-        this.enviarButtonFueraDeTurnoJugador= new JButton("Enviar");
-
-        //ENTRADA TURNO JUEGO BAJADO JUGADOR
-        this.inputJuegoBajadoJugador= new JTextField();
-        this.inputJuegoBajadoJugador.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        this.inputJuegoBajadoJugador.setBackground(Color.BLACK);
-        this.inputJuegoBajadoJugador.setForeground(Color.GREEN);
-        this.enviarButtonJuegoBajadoJugador= new JButton("Enviar");
-
+        panelInput.add(enviarButton,BorderLayout.WEST);
+        panelInput.add(inputField,BorderLayout.CENTER);
         add(panelInput,BorderLayout.SOUTH);
+        setPanelInput(TipoPanel.MENUINICIO);
 
-        // Agregar acción al botón ENTRADA MENU
-        this.enviarButtonMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String input = inputFieldMenu.getText();
-                procesarComando(input);
-                inputFieldMenu.setText("");  // Limpiar el campo de texto
-            }
-        });
-
-        // Agregar acción al botón ENTRADA JUGADOR
-        this.enviarButtonJugador.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String input = inputDescarteCarta.getText();
-                addjugador(input);
-                inputDescarteCarta.setText("");  // Limpiar el campo de texto
-            }
-        });
-
-        // Agregar acción al botón JUGADOR EN TURNO
-        this.enviarButtonTurnoJugador.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switch (inputTurnoJugador.getText().trim()){
-                    case "1" -> { robarDelMazo(); }
-                    case "2" -> { robarDelPozo(); }
-                    case "3" -> { bajarJuegos(); } // tirar la exception de que si no puede bajar los juegos lo deje de nuevo elegir otra opcion
-                    default -> { mostrarMensaje("opcion no valida");menuTurno();}
+    }
+    // Agregar acción al botón ENTRADA MENU
+    ActionListener menu = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch (inputField.getText().trim()){
+                case "1" -> {
+                    mostrarMensaje("Ingrese su Nombre: ");
+                    setPanelInput(TipoPanel.ENTRADA);
+                    inputField.setText("");
                 }
-                inputTurnoJugador.setText("");  // Limpiar el campo de texto
-            }
-        });
-
-        // Agregar acción al botón DESCARTE DEL JUGADOR EN TURNO
-        this.enviarButtonDescarteCarta.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String input = inputDescarteCarta.getText().trim();
-                descartarCarta(input);
-                inputDescarteCarta.setText("");  // Limpiar el campo de texto
-            }
-        });
-
-        // Agregar acción al botón FUERA DE TURNO JUGADOR
-        this.enviarButtonFueraDeTurnoJugador.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switch (inputfueraDeTurnoJugador.getText().trim()){
-                    case "1" ->{robarFueraDeTurno();}
-                    default -> {mostrarMensaje("opcion no valida");menuFueraDeTurno();}
+                case "2" -> {
+                    reglas();
+                    inputField.setText("");
                 }
-                inputfueraDeTurnoJugador.setText("");  // Limpiar el campo de texto
-            }
-        });
-
-        // Agregar acción al botón TURNO JUEGO BAJADO JUGADOR
-        this.enviarButtonJuegoBajadoJugador.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switch (inputJuegoBajadoJugador.getText().trim()){
-                    case "1" -> {}
-                    case "2" -> {}
-                    case "3" -> {}
-                    case "4" -> {}
-                    case "5" -> {}
-                    default -> {mostrarMensaje("opcion no valida");menuJuegoBajado();}
+                case "3" -> {
+                    iniciarRonda();
+                    inputField.setText("");
                 }
-                inputJuegoBajadoJugador.setText("");  // Limpiar el campo de texto
-            }
-        });
+                case "0" -> {
+                    System.exit(0);
+                    inputField.setText("");
+                }
+                default -> {
+                    mostrarMensaje("Opcion Invalida");
+                    menuInicio();
+                    inputField.setText("");
+                }
 
-        //TODO ME FALTA LA OPCION DE FUERA DE TURNO JUEGO BAJADO JUGADOR
-        //TODO ME FALTA LA OPCION DE QUE SEA ULTIMA RONDA, Y SOLO PUEDAN UBICAR CARTAS(OTRO MENU DISTINTO)
+            }
+            inputField.setText("");  // Limpiar el campo de texto
+        }
+    };
+
+    // Agregar acción al botón ENTRADA JUGADOR
+    ActionListener entradaJugador = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            addjugador(inputField.getText());
+            inputField.setText("");  // Limpiar el campo de texto
+        }
+    };
+
+    // Agregar acción al botón DESCARTE DEL JUGADOR EN TURNO
+    ActionListener turnoDescarteJugador = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String input = inputField.getText().trim();
+            descartarCarta(input);
+            inputField.setText("");  // Limpiar el campo de texto
+        }
+    };
+
+    // Agregar acción al botón FUERA DE TURNO JUGADOR
+    ActionListener fueraDeTurno = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch (inputField.getText().trim()) {
+                case "1" -> {robarFueraDeTurno();}
+                default -> {mostrarMensaje("opcion no valida");menuFueraDeTurno();}
+            }
+            inputField.setText("");  // Limpiar el campo de texto
+        }
+    };
+
+    // Agregar acción al botón JUGADOR EN TURNO
+    ActionListener jugadorEnTurno = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch (inputField.getText().trim()) {
+                case "1" -> {
+                    robarDelMazo();
+                }
+                case "2" -> {
+                    robarDelPozo();
+                }
+                case "3" -> {
+                    bajarJuegos();
+                } // tirar la exception de que si no puede bajar los juegos lo deje de nuevo elegir otra opcion
+                default -> {
+                    mostrarMensaje("opcion no valida");
+                    menuTurno();
+                }
+            }
+            inputField.setText("");  // Limpiar el campo de texto
+        }
+    };
+
+    // Agregar acción al botón TURNO JUEGO BAJADO JUGADOR
+    ActionListener turnoJuegoBajado = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch (inputField.getText().trim()) {
+                case "1" -> {}
+                case "2" -> {}
+                case "3" -> {}
+                case "4" -> {}
+                case "5" -> {}
+                default -> {mostrarMensaje("opcion no valida");menuJuegoBajado();}
+            }
+            inputField.setText("");  // Limpiar el campo de texto
+        }
+    };
+
+
+
+    public void setModelo(Mesa mesa){
+        this.controlador.setModelo(mesa);
     }
 
     private void robarFueraDeTurno() {
@@ -276,31 +257,6 @@ public class Consola extends JFrame implements IVista {
         //mostrar mazo y pozo
     }
 
-    private void procesarComando(String input) {
-        switch (input.trim()){
-            case "1" -> {
-                mostrarMensaje("Ingrese su Nombre: ");
-                setPanelInput(TipoPanel.ENTRADA);
-            }
-            case "2" -> {
-                reglas();
-            }
-            case "3" -> {
-                iniciarRonda();
-                mostrarCartasSolas();
-            }
-            case "0" -> {
-                System.exit(0);
-            }
-            default -> {
-                mostrarMensaje("Opcion Invalida");
-                menuInicio();
-            }
-
-        }
-
-    }
-
     @Override
     public void iniciar() {
         setVisible(true);
@@ -319,6 +275,8 @@ public class Consola extends JFrame implements IVista {
     private void iniciarRonda(){
         try {
             controlador.inicarRonda();
+            setPanelInput(TipoPanel.TURNO);
+            mostrarCartasConMazoYConPozo();
         } catch (Exception e){
             mostrarMensaje(e.toString());
             menuInicio();
@@ -331,54 +289,20 @@ public class Consola extends JFrame implements IVista {
     }
 
     private void setPanelInput(TipoPanel tipo){
-        switch (tipo){
-            case ENTRADA-> {
-                panelInput.removeAll();
-                panelInput.setLayout(new BorderLayout());
-                panelInput.add(inputFieldNombreJugador,BorderLayout.CENTER);
-                panelInput.add(enviarButtonJugador,BorderLayout.WEST);
-                panelInput.updateUI();
-            }
-            case TURNO->{
-                panelInput.removeAll();
-                panelInput.setLayout(new BorderLayout());
-                panelInput.add(enviarButtonTurnoJugador,BorderLayout.WEST);
-                panelInput.add(inputTurnoJugador,BorderLayout.CENTER);
-                panelInput.updateUI();
-            }
-            case FUERADETURNO->{
-                panelInput.removeAll();
-                panelInput.setLayout(new BorderLayout());
-                panelInput.add(enviarButtonFueraDeTurnoJugador,BorderLayout.WEST);
-                panelInput.add(inputfueraDeTurnoJugador,BorderLayout.CENTER);
-                panelInput.updateUI();
-            }
-            case TURNODESCARTE->{
-                panelInput.removeAll();
-                panelInput.setLayout(new BorderLayout());
-                panelInput.add(enviarButtonDescarteCarta,BorderLayout.WEST);
-                panelInput.add(inputDescarteCarta,BorderLayout.CENTER);
-                panelInput.updateUI();
-            }
-            case TURNOJUEGOBAJADO -> {
-                panelInput.removeAll();
-                panelInput.setLayout(new BorderLayout());
-                panelInput.add(enviarButtonJuegoBajadoJugador,BorderLayout.WEST);
-                panelInput.add(inputJuegoBajadoJugador,BorderLayout.CENTER);
-                panelInput.updateUI();
-            }
-
-            case MENUINICIO -> {
-                panelInput.removeAll();
-                panelInput.setLayout(new BorderLayout());
-                panelInput.add(enviarButtonMenu,BorderLayout.WEST);
-                panelInput.add(inputFieldMenu,BorderLayout.CENTER);
-                panelInput.updateUI();
-            }
-
+        //ELIMINAR TODOS LOS ACTION LSITENERS VIEJOS:
+        for (ActionListener al : enviarButton.getActionListeners()) {
+            enviarButton.removeActionListener(al);
         }
-
-
+        switch (tipo){
+            case ENTRADA-> {this.enviarButton.addActionListener(entradaJugador);}
+            case TURNO->{this.enviarButton.addActionListener(jugadorEnTurno);}
+            case FUERADETURNO->{this.enviarButton.addActionListener(fueraDeTurno);}
+            case TURNODESCARTE->{this.enviarButton.addActionListener(turnoDescarteJugador);}
+            case TURNOJUEGOBAJADO -> {this.enviarButton.addActionListener(turnoJuegoBajado);}
+//          case FUERADETURNOJUEGOBAJADO ->{}
+//          case TURNOULTIMARONDA ->{}
+            case MENUINICIO -> {this.enviarButton.addActionListener(menu);}
+        }
     }
 
 
