@@ -30,6 +30,7 @@ public class Controlador implements IObservador {
         }
     }
 
+
     @Override
     public void update(Evento evento) {
         //TODO evento cuando se descarta una carta es al pedo mostrarlo(es mejor un actualizar cartas)
@@ -37,6 +38,14 @@ public class Controlador implements IObservador {
             case JUGADORAGREGADO -> {vista.mostrarMensaje("Jugador Agregado con exito!");}
             case CAMBIOTURNO -> {vista.mostrarMensaje("es el turno de: " + evento.getContenido());}
             case ULTIMARONDA -> {vista.mostrarMensaje("es ultima ronda: ubica todas las cartas que puedas");}
+            case JUEGOCOMENZADO -> {;
+                if (jugador.equals(mesa.getTurno())){
+                    vista.menuTurno();
+                } else {
+                    vista.menuFueraDeTurno();
+                }
+            }
+            case ACTUALIZARCARTAS -> {vista.actualizarCartas();}
 
         }
 
@@ -47,21 +56,19 @@ public class Controlador implements IObservador {
             mesa.altaJugador(input);
             this.jugador = input;
         } catch (Exception e){
-            vista.mostrarMensaje(e.toString());
+            vista.mostrarMensaje(e.getMessage());
         }
     }
 
-    public void inicarRonda() throws Exception {
-        if (!mesa.canEmpezarRonda()){
-            throw new Exception("se necesita al menos un jugador mas para comenzar la ronda");
-        } else {
+    public void inicarRonda() {
+        try {
+            mesa.canEmpezarRonda();
             mesa.iniciarRonda();
             String turnoActual = mesa.getTurno();
             vista.mostrarMensaje("ronda: " + mesa.getNroRondaActual() + " comenzada");
             vista.mostrarMensaje("turno de: "+turnoActual);
-            if (jugador.equals(mesa.getTurno())){
-                vista.jugarTurno();
-            }
+        } catch (Exception e) {
+            vista.mostrarMensaje(e.getMessage());
         }
     }
 
@@ -70,7 +77,7 @@ public class Controlador implements IObservador {
         try {
             return mesa.cartasManoJugadorToString(this.jugador);
         } catch (Exception e){
-            vista.mostrarMensaje(e.toString());
+            vista.mostrarMensaje(e.getMessage());
         }
         return null;
     }

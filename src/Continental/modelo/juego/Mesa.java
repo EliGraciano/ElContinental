@@ -50,9 +50,12 @@ public class Mesa implements IObservable {
 
     // que reciba un numero (cantidad de jugadores) y en base a este decida cuantos mazos crear
 
-    public boolean canEmpezarRonda() {
+    public void canEmpezarRonda() throws Exception{
         //le devuelve a la vista si se puede empezar  o no la ronda para poder poenr le button en enabled
-        return this.jugadores.size() >= 2;
+        if (!(this.jugadores.size() >= 2)){
+            throw new Exception("se necesitan mas jugadores para poder comenzar el juego");
+        }
+
     }
 
 
@@ -186,6 +189,7 @@ public class Mesa implements IObservable {
         //chequear que no roben mas de una carta
         this.turno.robar(this.pozo);
         this.yaRobo = true;
+        notificar(new Evento(TipoEvento.ACTUALIZARCARTAS));
     }
 
     private void terminarTurno(){
@@ -222,6 +226,7 @@ public class Mesa implements IObservable {
         turno.robar(this.mazo);
         this.yaRobo = true;
         interrumpir();
+        notificar(new Evento(TipoEvento.ACTUALIZARCARTAS));
     }
 
     private void interrumpir(){

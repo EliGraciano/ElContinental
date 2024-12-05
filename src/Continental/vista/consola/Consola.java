@@ -60,7 +60,8 @@ public class Consola extends JFrame implements IVista {
         public void actionPerformed(ActionEvent e) {
             switch (inputField.getText().trim()){
                 case "1" -> {
-                    mostrarMensaje("Ingrese su Nombre: ");
+                    areaSalida.append("Ingrese su Nombre: ");
+                    //mostrarMensaje("Ingrese su Nombre: "); NO USO EL MOSTRARMENSAJE PORQUE HACE UN SALTO EN LINEA Y QUEDA FEO
                     setPanelInput(TipoPanel.ENTRADA);
                     inputField.setText("");
                 }
@@ -180,7 +181,7 @@ public class Consola extends JFrame implements IVista {
         try {
             controlador.descartarCarta(input);
         } catch (Exception e){
-            mostrarMensaje(e.toString());
+            mostrarMensaje(e.getMessage());
             menuDescarte();
         }
     }
@@ -188,6 +189,7 @@ public class Consola extends JFrame implements IVista {
     private void bajarJuegos() {
     }
 
+    @Override
     public void menuInicio(){
         mostrarMensaje("------ MENU PRINCIPAL ---------\n" +
                             "------ 1: agregar jugador ----- \n" +
@@ -198,6 +200,7 @@ public class Consola extends JFrame implements IVista {
         setPanelInput(TipoPanel.MENUINICIO);
     }
 
+    @Override
     public void menuTurno(){
         mostrarMensaje("------ Tu turno -------\n" +
                             "------ 1: robar del mazo ------ \n" +
@@ -205,10 +208,10 @@ public class Consola extends JFrame implements IVista {
                             "------ 3: bajar juegos -------- \n"
         );
         setPanelInput(TipoPanel.TURNO);
-        mostrarCartasConMazoYConPozo();
         //mostrar mazo y pozo y su mano(para saber que robar y de donde conviene)
     }
 
+    @Override
     public void menuDescarte(){
         mostrarMensaje("------ Tu turno -------\n" +
                             "------ Seleccione la posicion de carta a descartar ------ \n"
@@ -216,18 +219,19 @@ public class Consola extends JFrame implements IVista {
         );
         //crear panel para el menu de fuera de turno
         setPanelInput(TipoPanel.TURNODESCARTE);
-        mostrarCartasSolas();
     }
 
+    @Override
     public void menuFueraDeTurno(){
         mostrarMensaje("------ fuera de turno -------\n" +
                             "------ 1: robar del pozo ------ \n"
         );
+        mostrarCartasConMazoYConPozoYJuegosEnMesa();
         setPanelInput(TipoPanel.FUERADETURNO);
-        mostrarCartasConMazoYConPozo();
         // mostrar mazo y pozo
     }
 
+    @Override
     public void menuJuegoBajado(){
         mostrarMensaje("----- Tu turno -----------\n" +
                             "----- 1: robar del mazo -------- \n" +
@@ -237,10 +241,10 @@ public class Consola extends JFrame implements IVista {
                             "----- 5: saltar turno ---------- \n"
         );
         setPanelInput(TipoPanel.TURNOJUEGOBAJADO);
-        mostrarCartasConMazoYConPozoYJuegosEnMesa();
     }
 
-    private void mostrarCartasConMazoYConPozoYJuegosEnMesa() {
+    @Override
+    public void mostrarCartasConMazoYConPozoYJuegosEnMesa() {
         mostrarCartasConMazoYConPozo();
         //mostrar solo los juegos en mesa
     }
@@ -252,8 +256,8 @@ public class Consola extends JFrame implements IVista {
 
     public void mostrarCartasConMazoYConPozo(){
         mostrarCartasSolas();
-        mostrarMensaje(controlador.mostrarMazo());
-        mostrarMensaje(controlador.mostrarPozo());
+        mostrarMensaje("mazo: " + controlador.mostrarMazo());
+        mostrarMensaje("pozo: " + controlador.mostrarPozo());
         //mostrar mazo y pozo
     }
 
@@ -267,10 +271,12 @@ public class Consola extends JFrame implements IVista {
     public void mostrarMensaje(String s) {
         areaSalida.append(s + "\n");
     }
+
     @Override
-    public void jugarTurno(){
-        menuTurno();
+    public void actualizarCartas(){
+        ;
     }
+
 
     private void iniciarRonda(){
         try {
@@ -278,12 +284,13 @@ public class Consola extends JFrame implements IVista {
             setPanelInput(TipoPanel.TURNO);
             mostrarCartasConMazoYConPozo();
         } catch (Exception e){
-            mostrarMensaje(e.toString());
+            mostrarMensaje(e.getMessage());
             menuInicio();
         }
     }
 
     private void addjugador(String nombre){
+        areaSalida.append(nombre+"\n");
         controlador.registrarUsuario(nombre);
         menuInicio();
     }

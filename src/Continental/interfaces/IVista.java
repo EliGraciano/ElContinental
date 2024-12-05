@@ -8,7 +8,19 @@ public interface IVista {
 
     void mostrarMensaje(String s);
 
-    void jugarTurno();
-
     void setModelo(Mesa mesa);
+
+    void menuInicio();
+
+    void menuTurno();
+
+    void menuDescarte();
+
+    void menuFueraDeTurno();
+
+    void menuJuegoBajado();
+
+    void mostrarCartasConMazoYConPozoYJuegosEnMesa();
+
+    void actualizarCartas();
 }
