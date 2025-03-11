@@ -191,7 +191,7 @@ public class Mesa implements IObservable {
     }
 
     private void terminarTurno(){
-        Jugador turnoSiguiente = this.jugadores.poll(); // Sacás al jugador actual de la cola
+        Jugador turnoSiguiente = this.jugadores.poll(); // Sacás al siguiente turno de la cola
         System.out.println("Turno actual antes de cambiar: " + this.turno);
 
         if (esFinRonda()) {
@@ -201,7 +201,7 @@ public class Mesa implements IObservable {
             notificar(new Evento(TipoEvento.ULTIMARONDA));
         } else {
             // Cambiás al siguiente jugador
-            this.jugadores.add(this.turno); // Agregás al jugador que terminó al final de la cola
+            this.jugadores.add(turnoSiguiente); // Agregás al jugador que terminó al final de la cola
             this.turno = turnoSiguiente; // Asignás el siguiente turno
         }
 

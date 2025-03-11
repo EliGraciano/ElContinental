@@ -123,9 +123,9 @@ public class Controlador implements IObservador {
             int numero = Integer.parseInt(pos);
             mesa.descartar(numero-1);
         } catch (Exception e) {
-            throw new Exception("porfavor ingrese un numero valido");
+            throw new Exception(e);
+            //throw new Exception("porfavor ingrese un numero valido");
         }
-
     }
 
 
