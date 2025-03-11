@@ -9,8 +9,11 @@ public class Pozo extends ConjuntoDeCartas{
     }
 
 
-    public String getCartaTope(){
-        return this.cartas.getFirst().toString();
+    public String getCartaTope() {
+        if (cartas.isEmpty()) {
+            return "pozo vacío";
+        }
+        return cartas.get(cartas.size() - 1).toString(); // Obtener la última carta
     }
 
     public Carta robar(){

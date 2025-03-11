@@ -60,16 +60,10 @@ public class Consola extends JFrame implements IVista {
         public void actionPerformed(ActionEvent e) {
             switch (inputField.getText().trim()){
                 case "1" -> {
-                    areaSalida.append("Ingrese su Nombre: ");
-                    //mostrarMensaje("Ingrese su Nombre: "); NO USO EL MOSTRARMENSAJE PORQUE HACE UN SALTO EN LINEA Y QUEDA FEO
-                    setPanelInput(TipoPanel.ENTRADA);
-                    inputField.setText("");
-                }
-                case "2" -> {
                     reglas();
                     inputField.setText("");
                 }
-                case "3" -> {
+                case "2" -> {
                     iniciarRonda();
                     inputField.setText("");
                 }
@@ -112,7 +106,8 @@ public class Consola extends JFrame implements IVista {
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (inputField.getText().trim()) {
-                case "1" -> {robarFueraDeTurno();}
+                case "1" -> {robarFueraDeTurno(true);}
+                case "2" -> {robarFueraDeTurno(false);}
                 default -> {mostrarMensaje("opcion no valida");menuFueraDeTurno();}
             }
             inputField.setText("");  // Limpiar el campo de texto
@@ -164,8 +159,8 @@ public class Consola extends JFrame implements IVista {
         this.controlador.setModelo(mesa);
     }
 
-    private void robarFueraDeTurno() {
-        controlador.robarFueraDeTurnoJugador();
+    private void robarFueraDeTurno(boolean boleano) {
+        controlador.robarFueraDeTurnoJugador(boleano);
     }
 
     private void robarDelMazo() {
@@ -187,17 +182,25 @@ public class Consola extends JFrame implements IVista {
     }
 
     private void bajarJuegos() {
+        //TODO preguntar al controlador si ya bajo
     }
 
     @Override
     public void menuInicio(){
         mostrarMensaje("------ MENU PRINCIPAL ---------\n" +
-                            "------ 1: agregar jugador ----- \n" +
-                            "------ 2: ver reglas ---------- \n" +
-                            "------ 3: comenzar juego ------ \n" +
+                            "------ 1: ver reglas ---------- \n" +
+                            "------ 2: comenzar juego ------ \n" +
                             "------ 0: Salir --------------- \n"
         );
         setPanelInput(TipoPanel.MENUINICIO);
+    }
+
+    @Override
+    public void inicio(){
+        areaSalida.append("Ingrese su Nombre: ");
+        //mostrarMensaje("Ingrese su Nombre: "); NO USO EL MOSTRARMENSAJE PORQUE HACE UN SALTO EN LINEA Y QUEDA FEO
+        setPanelInput(TipoPanel.ENTRADA);
+        inputField.setText("");
     }
 
     @Override
@@ -208,6 +211,7 @@ public class Consola extends JFrame implements IVista {
                             "------ 3: bajar juegos -------- \n"
         );
         setPanelInput(TipoPanel.TURNO);
+        mostrarCartasConMazoYConPozo();
         //mostrar mazo y pozo y su mano(para saber que robar y de donde conviene)
     }
 
@@ -217,6 +221,7 @@ public class Consola extends JFrame implements IVista {
                             "------ Seleccione la posicion de carta a descartar ------ \n"
                 //mostrar la mano(y esperar un numero que sea el indice)
         );
+        mostrarCartasConMazoYConPozo();
         //crear panel para el menu de fuera de turno
         setPanelInput(TipoPanel.TURNODESCARTE);
     }
@@ -224,7 +229,8 @@ public class Consola extends JFrame implements IVista {
     @Override
     public void menuFueraDeTurno(){
         mostrarMensaje("------ fuera de turno -------\n" +
-                            "------ 1: robar del pozo ------ \n"
+                            "------ 1: robar del pozo ------ \n" +
+                            "------ 2: no robar el pozo ------ \n"
         );
         mostrarCartasConMazoYConPozoYJuegosEnMesa();
         setPanelInput(TipoPanel.FUERADETURNO);
@@ -240,10 +246,11 @@ public class Consola extends JFrame implements IVista {
                             "----- 4: ubicar carta por mono - \n" +
                             "----- 5: saltar turno ---------- \n"
         );
+        mostrarCartasConMazoYConPozoYJuegosEnMesa();
         setPanelInput(TipoPanel.TURNOJUEGOBAJADO);
     }
 
-    @Override
+
     public void mostrarCartasConMazoYConPozoYJuegosEnMesa() {
         mostrarCartasConMazoYConPozo();
         //mostrar solo los juegos en mesa
@@ -254,9 +261,10 @@ public class Consola extends JFrame implements IVista {
         mostrarMensaje(controlador.cartasManoUsuario().toString());
     }
 
+    @Override
     public void mostrarCartasConMazoYConPozo(){
         mostrarCartasSolas();
-        mostrarMensaje("mazo: " + controlador.mostrarMazo());
+        mostrarMensaje("mazo: [ ??? ]" );
         mostrarMensaje("pozo: " + controlador.mostrarPozo());
         //mostrar mazo y pozo
     }
@@ -264,7 +272,7 @@ public class Consola extends JFrame implements IVista {
     @Override
     public void iniciar() {
         setVisible(true);
-        menuInicio();
+        inicio();
     }
 
     @Override
@@ -281,13 +289,12 @@ public class Consola extends JFrame implements IVista {
     private void iniciarRonda(){
         try {
             controlador.inicarRonda();
-            setPanelInput(TipoPanel.TURNO);
-            mostrarCartasConMazoYConPozo();
         } catch (Exception e){
             mostrarMensaje(e.getMessage());
             menuInicio();
         }
     }
+
 
     private void addjugador(String nombre){
         areaSalida.append(nombre+"\n");
@@ -295,7 +302,7 @@ public class Consola extends JFrame implements IVista {
         menuInicio();
     }
 
-    private void setPanelInput(TipoPanel tipo){
+    public void setPanelInput(TipoPanel tipo){
         //ELIMINAR TODOS LOS ACTION LSITENERS VIEJOS:
         for (ActionListener al : enviarButton.getActionListeners()) {
             enviarButton.removeActionListener(al);

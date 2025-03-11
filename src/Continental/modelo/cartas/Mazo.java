@@ -20,10 +20,6 @@ public class Mazo extends ConjuntoDeCartas{
         }
     }
 
-    public String getCartaTope(){
-        return this.cartas.getLast().toString();
-    }
-
     private void generarCartas(ArrayList<Carta> mazo){
         // genero todas las cartas que va a tener el mazo
         for (Palo palo : Palo.values()){

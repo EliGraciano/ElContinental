@@ -60,6 +60,12 @@ public class Carta {
         if (this.isPalo(Palo.MONO)){
             return "{" + palo + "}";
         }
+        switch (this.valor){
+            case 1 -> {return "{ A de " + palo + "}";}
+            case 11 -> {return "{ J de " + palo + "}";}
+            case 12 -> {return "{ Q de " + palo + "}";}
+            case 13 -> {return "{ K de " + palo + "}";}
+        }
         return  "{" + this.valor + " de " + palo + "}";
     }
 

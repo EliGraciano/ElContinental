@@ -4,6 +4,7 @@ import Continental.modelo.eventos.Evento;
 import Continental.modelo.juego.Mesa;
 import Continental.interfaces.IObservador;
 import Continental.interfaces.IVista;
+import Continental.vista.consola.TipoPanel;
 import Continental.vista.grafica.VistaJugador;
 
 import java.util.ArrayList;
@@ -35,17 +36,57 @@ public class Controlador implements IObservador {
     public void update(Evento evento) {
         //TODO evento cuando se descarta una carta es al pedo mostrarlo(es mejor un actualizar cartas)
         switch (evento.getTipo()){
-            case JUGADORAGREGADO -> {vista.mostrarMensaje("Jugador Agregado con exito!");}
-            case CAMBIOTURNO -> {vista.mostrarMensaje("es el turno de: " + evento.getContenido());}
+            case JUGADORAGREGADO -> {vista.mostrarMensaje("\n" + evento.getContenido() + " se unio al juego!");} //if (jugador.equals(evento.getContenido())) que solo muestre agregado con exito si es la vista que tiene que ser
+            case CAMBIOTURNO -> {
+                if (!(jugador.equals(mesa.getTurno()))){
+                    vista.mostrarMensaje("es el turno de: " + evento.getContenido());
+                    vista.mostrarMensaje("------- ESPERANDO AL JUGADOR: " + mesa.getTurno() + " --------");
+                    vista.mostrarCartasConMazoYConPozo();
+                } else {
+                    vista.menuTurno();
+                }
+            }
+
             case ULTIMARONDA -> {vista.mostrarMensaje("es ultima ronda: ubica todas las cartas que puedas");}
-            case JUEGOCOMENZADO -> {;
+            case JUEGOCOMENZADO -> {
+                String turnoActual = mesa.getTurno();
+                vista.mostrarMensaje("ronda: " + mesa.getNroRondaActual() + " comenzada");
+                if (!jugador.equals(mesa.getTurno())) {
+                    vista.mostrarMensaje("turno de: " + turnoActual);
+                }
                 if (jugador.equals(mesa.getTurno())){
                     vista.menuTurno();
                 } else {
+                    vista.mostrarMensaje("------- ESPERANDO AL JUGADOR: " + mesa.getTurno() + " --------");
+                    vista.mostrarCartasConMazoYConPozo();
+                }
+            }
+            case ACTUALIZARCARTAS -> {
+                if (jugador.equals(mesa.getTurno())){
+                    vista.menuDescarte();
+                } else {
+                    vista.mostrarMensaje("------- ESPERANDO AL JUGADOR: " + mesa.getTurno() + " --------");
+                    vista.mostrarCartasConMazoYConPozo();
+                }
+            }
+            case PAUSAJUEGO -> {
+                if (jugador.equals(mesa.getTurno())) {
+                    vista.mostrarMensaje("------- ESPERANDO SI ALGUN JUGADOR QUIERE ROBAR DEL POZO --------");
+                }
+            }
+            case REANUDARJUEGO -> {
+                if (jugador.equals(mesa.getTurno())){
+                    vista.menuDescarte();
+                } else {
+                    vista.mostrarMensaje("------- ESPERANDO Al JUGADOR: " + mesa.getTurno() + " SE DESCARTE --------");
+                    vista.mostrarCartasConMazoYConPozo();
+                }
+            }
+            case PREGUNTARROBARPOZO -> {
+                if (!jugador.equals(mesa.getTurno())){
                     vista.menuFueraDeTurno();
                 }
             }
-            case ACTUALIZARCARTAS -> {vista.actualizarCartas();}
 
         }
 
@@ -64,40 +105,32 @@ public class Controlador implements IObservador {
         try {
             mesa.canEmpezarRonda();
             mesa.iniciarRonda();
-            String turnoActual = mesa.getTurno();
-            vista.mostrarMensaje("ronda: " + mesa.getNroRondaActual() + " comenzada");
-            vista.mostrarMensaje("turno de: "+turnoActual);
         } catch (Exception e) {
             vista.mostrarMensaje(e.getMessage());
         }
     }
 
     public ArrayList<String> cartasManoUsuario()  {
-        //TODO sacar la excepcion ya que nunca la tiraria, para poder sacar el return null
-        try {
-            return mesa.cartasManoJugadorToString(this.jugador);
-        } catch (Exception e){
-            vista.mostrarMensaje(e.getMessage());
+        ArrayList<String> cartas = mesa.cartasManoJugadorToString(this.jugador);
+        if (cartas == null){
+            vista.mostrarMensaje("Jugador no encontrado");
         }
-        return null;
+        return cartas;
     }
 
     public void descartarCarta(String pos) throws Exception{
         try {
             int numero = Integer.parseInt(pos);
-            mesa.descartar(numero);
+            mesa.descartar(numero-1);
         } catch (Exception e) {
             throw new Exception("porfavor ingrese un numero valido");
         }
 
     }
 
-    public String mostrarMazo(){
-        return this.mesa.getCartaTopeMazo();
-    }
 
     public String mostrarPozo(){
-        return this.mesa.getCartaTopePozo();
+            return this.mesa.getCartaTopePozo();
     }
 
     public void robarMazo() {
@@ -105,10 +138,18 @@ public class Controlador implements IObservador {
     }
 
     public void robarPozo() {
+        try {
         mesa.robarDelPozo();
+        } catch (Exception e){
+        vista.mostrarMensaje(e.getMessage());
+        }
     }
 
-    public void robarFueraDeTurnoJugador() {
-        mesa.respuestaRobarPozo(true,this.jugador);
+    public void robarFueraDeTurnoJugador(boolean resultado) {
+        mesa.respuestaRobarPozo(resultado,this.jugador);
+    }
+
+    public String getJugador() {
+        return this.jugador;
     }
 }

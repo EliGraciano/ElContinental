@@ -70,11 +70,8 @@ public class Mesa implements IObservable {
         return (nroRondaActual <=3) ? 2 : 3;
     }
 
-    public String getCartaTopeMazo(){
-        return this.mazo.getCartaTope();
-    }
 
-    public String getCartaTopePozo(){
+    public String getCartaTopePozo() {
         return this.pozo.getCartaTope();
     }
 
@@ -101,7 +98,7 @@ public class Mesa implements IObservable {
             this.mazo.mezclar();
         }
         //hacer que los eventos sean una clase(para enviar contenido) hago un new evento aca
-        turno = this.jugadores.poll();
+        this.turno = this.jugadores.poll();
         this.jugadores.add(turno);
         this.jugadorATerminar = null;
         repartir();
@@ -130,7 +127,7 @@ public class Mesa implements IObservable {
             throw new Exception("ya hay 8 jugadores!");
         }
         this.jugadores.add(new Jugador(nombre));
-        notificar(new Evento(TipoEvento.JUGADORAGREGADO));
+        notificar(new Evento(TipoEvento.JUGADORAGREGADO,nombre));
     }
 
     //repartir privado
@@ -180,30 +177,37 @@ public class Mesa implements IObservable {
 
     public void descartar(int pos) throws IndexOutOfBoundsException {
         this.turno.descartar(pos, this.pozo);
-        notificar(new Evento(TipoEvento.CARTADESCARTADA));
         terminarTurno();
     }
 
 
-    public void robarDelPozo() throws IllegalStateException {
+    public void robarDelPozo() throws Exception {
         //chequear que no roben mas de una carta
+        System.out.println("Antes de robar - Pozo: " + this.pozo.getCartaTope() + ", Turno: " + turno);
         this.turno.robar(this.pozo);
         this.yaRobo = true;
+        System.out.println("Después de robar - Pozo: " + this.pozo.getCartaTope() + ", Turno: " + turno);
         notificar(new Evento(TipoEvento.ACTUALIZARCARTAS));
     }
 
     private void terminarTurno(){
-        Jugador poll = this.jugadores.poll();
+        Jugador turnoSiguiente = this.jugadores.poll(); // Sacás al jugador actual de la cola
+        System.out.println("Turno actual antes de cambiar: " + this.turno);
+
         if (esFinRonda()) {
-            //en este momento los jugadores no se pueden descartar mas cartas(solo ubicar)
-            this.jugadorATerminar = poll;
-            this.turno = poll;
+            // Última ronda: el turno permanece con el último jugador
+            this.jugadorATerminar = turnoSiguiente;
+            this.turno = turnoSiguiente;
             notificar(new Evento(TipoEvento.ULTIMARONDA));
+        } else {
+            // Cambiás al siguiente jugador
+            this.jugadores.add(this.turno); // Agregás al jugador que terminó al final de la cola
+            this.turno = turnoSiguiente; // Asignás el siguiente turno
         }
-        this.jugadores.add(turno);
-        this.turno = poll;
-        this.yaRobo = false;
-        notificar(new Evento(TipoEvento.CAMBIOTURNO,getTurno()));
+
+        this.yaRobo = false; // Restablecés el estado de robo
+        System.out.println("Nuevo turno asignado a: " + this.turno);
+        notificar(new Evento(TipoEvento.CAMBIOTURNO, this.turno.getNombre()));
 
     }
 
@@ -230,17 +234,29 @@ public class Mesa implements IObservable {
     }
 
     private void interrumpir(){
-        //me fijo ordenadamente si algun jugador quiere robar el pozo
         notificar(new Evento(TipoEvento.PAUSAJUEGO));
-        if (this.jugadores.peek() == turno){
-            this.jugadores.add(this.jugadores.poll());
+        ArrayList<Jugador> jugadoresPendientes = new ArrayList<>(this.jugadores);
+        interrumpirRec(jugadoresPendientes, this.turno);
+    }
+
+    private void interrumpirRec(ArrayList<Jugador> jugadoresPendientes, Jugador turnoOriginal) {
+        if (jugadoresPendientes.isEmpty()) {
+            // Si ya preguntamos a todos y nadie robó, reanudamos el juego
             notificar(new Evento(TipoEvento.REANUDARJUEGO));
-        }else{
-            Jugador player = this.jugadores.poll();
-            this.jugadores.add(player);
-            //hacer TOString en jugador
-            notificar(new Evento(TipoEvento.PREGUNTARROBARPOZO,player.toString()));
+            return;
         }
+
+        // Tomamos al primer jugador de la lista
+        Jugador jugadorActual = jugadoresPendientes.remove(0);
+
+        // Si es el turno original, terminamos la consulta
+        if (jugadorActual.equals(turnoOriginal)) {
+            notificar(new Evento(TipoEvento.REANUDARJUEGO));
+            return;
+        }
+
+        // Preguntamos al jugador si quiere robar del pozo
+        notificar(new Evento(TipoEvento.PREGUNTARROBARPOZO, jugadorActual.toString()));
     }
 
 
@@ -252,7 +268,7 @@ public class Mesa implements IObservable {
             //que termine una vez q robo
             notificar(new Evento(TipoEvento.REANUDARJUEGO));
         }else{
-            interrumpir();
+            interrumpirRec(new ArrayList<>(this.jugadores), this.turno);
         }
     }
 
@@ -293,12 +309,13 @@ public class Mesa implements IObservable {
         return this.turno.getMano().isEmpty() && this.turno.isJuegoBajado();
     }
 
-    public ArrayList<String> cartasManoJugadorToString(String nombre) throws Exception{
+    public ArrayList<String> cartasManoJugadorToString(String nombre) {
         for (Jugador player : this.jugadores){
-            player.toString().equals(nombre);
-            return player.cartasManoToString();
+            if (player.toString().equals(nombre)) {
+                return player.cartasManoToString();
+            }
         }
-        throw new Exception("Jugador no encontrado");
+        return null;
     }
 
     @Override

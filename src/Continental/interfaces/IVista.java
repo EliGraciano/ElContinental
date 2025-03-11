@@ -1,6 +1,7 @@
 package Continental.interfaces;
 
 import Continental.modelo.juego.Mesa;
+import Continental.vista.consola.TipoPanel;
 
 public interface IVista {
 
@@ -10,7 +11,11 @@ public interface IVista {
 
     void setModelo(Mesa mesa);
 
+    void mostrarCartasConMazoYConPozo();
+
     void menuInicio();
+
+    void inicio();
 
     void menuTurno();
 
@@ -20,7 +25,7 @@ public interface IVista {
 
     void menuJuegoBajado();
 
-    void mostrarCartasConMazoYConPozoYJuegosEnMesa();
-
     void actualizarCartas();
+
+    void setPanelInput(TipoPanel tipo);
 }
