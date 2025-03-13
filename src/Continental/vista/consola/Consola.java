@@ -297,9 +297,8 @@ public class Consola extends JFrame implements IVista {
 
 
     private void addjugador(String nombre){
-        areaSalida.append(nombre+"\n");
+        areaSalida.append(nombre + "\n");
         controlador.registrarUsuario(nombre);
-        menuInicio();
     }
 
     public void setPanelInput(TipoPanel tipo){

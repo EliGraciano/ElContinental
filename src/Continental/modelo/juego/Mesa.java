@@ -235,28 +235,20 @@ public class Mesa implements IObservable {
 
     private void interrumpir(){
         notificar(new Evento(TipoEvento.PAUSAJUEGO));
-        ArrayList<Jugador> jugadoresPendientes = new ArrayList<>(this.jugadores);
-        interrumpirRec(jugadoresPendientes, this.turno);
+        Jugador jugadorSiguiente = this.jugadores.peek();
+        interrumpirRec(this.turno.toString(),jugadorSiguiente.getNombre());
     }
 
-    private void interrumpirRec(ArrayList<Jugador> jugadoresPendientes, Jugador turnoOriginal) {
-        if (jugadoresPendientes.isEmpty()) {
+    private void interrumpirRec(String turnoOriginal,String jugadorPreguntado) {
+        if (!jugadorPreguntado.equals(turnoOriginal)) {
+            //preguntamos si quiere robar
+            notificar(new Evento(TipoEvento.PREGUNTARROBARPOZO, jugadorPreguntado.toString()));
+        } else {
             // Si ya preguntamos a todos y nadie robó, reanudamos el juego
-            notificar(new Evento(TipoEvento.REANUDARJUEGO));
+            // si es el turno originañ terminamos la recursion
+            //notificar(new Evento(TipoEvento.REANUDARJUEGO));
             return;
         }
-
-        // Tomamos al primer jugador de la lista
-        Jugador jugadorActual = jugadoresPendientes.remove(0);
-
-        // Si es el turno original, terminamos la consulta
-        if (jugadorActual.equals(turnoOriginal)) {
-            notificar(new Evento(TipoEvento.REANUDARJUEGO));
-            return;
-        }
-
-        // Preguntamos al jugador si quiere robar del pozo
-        notificar(new Evento(TipoEvento.PREGUNTARROBARPOZO, jugadorActual.toString()));
     }
 
 
@@ -268,7 +260,8 @@ public class Mesa implements IObservable {
             //que termine una vez q robo
             notificar(new Evento(TipoEvento.REANUDARJUEGO));
         }else{
-            interrumpirRec(new ArrayList<>(this.jugadores), this.turno);
+            this.jugadores.add(jugaux);
+            interrumpirRec(this.turno.toString(),jugaux.toString());
         }
     }
 
@@ -320,6 +313,7 @@ public class Mesa implements IObservable {
 
     @Override
     public void notificar(Evento evento){
+        System.out.println("Evento notificado: " + evento.getTipo() + " para " + evento.getContenido());
         for (IObservador obser : this.observadores){
             obser.update(evento);
         }

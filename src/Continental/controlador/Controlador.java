@@ -74,6 +74,7 @@ public class Controlador implements IObservador {
                     vista.mostrarMensaje("------- ESPERANDO SI ALGUN JUGADOR QUIERE ROBAR DEL POZO --------");
                 }
             }
+            //TODO cuando uso el reanudar juego tranquilamente podria usar actualizarcartas(hacen lo mismo)
             case REANUDARJUEGO -> {
                 if (jugador.equals(mesa.getTurno())){
                     vista.menuDescarte();
@@ -96,8 +97,10 @@ public class Controlador implements IObservador {
         try {
             mesa.altaJugador(input);
             this.jugador = input;
+            vista.menuInicio();
         } catch (Exception e){
             vista.mostrarMensaje(e.getMessage());
+            vista.inicio();
         }
     }
 
