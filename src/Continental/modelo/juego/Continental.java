@@ -10,11 +10,14 @@ public class Continental {
         IVista vista = new Consola();
         IVista vista2 = new Consola();
         //IVista vista3 = new Consola();
+        //IVista vista3 = new Consola();
         vista.setModelo(mesa1);
         vista2.setModelo(mesa1);
         //vista3.setModelo(mesa1);
+        //vista3.setModelo(mesa1);
         vista.iniciar();
         vista2.iniciar();
+        //vista3.iniciar();
         //vista3.iniciar();
     }
 

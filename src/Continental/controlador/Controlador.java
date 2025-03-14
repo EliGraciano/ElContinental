@@ -36,7 +36,14 @@ public class Controlador implements IObservador {
     public void update(Evento evento) {
         //TODO evento cuando se descarta una carta es al pedo mostrarlo(es mejor un actualizar cartas)
         switch (evento.getTipo()){
-            case JUGADORAGREGADO -> {vista.mostrarMensaje("\n" + evento.getContenido() + " se unio al juego!");} //if (jugador.equals(evento.getContenido())) que solo muestre agregado con exito si es la vista que tiene que ser
+            case JUGADORAGREGADO -> {
+                vista.mostrarMensaje("\n" + evento.getContenido() + " se unio al juego!");
+                //TODO al primer if nunca ingresa!
+//                if (evento.getContenido().trim().equals(this.jugador)){
+//                    vista.mostrarMensaje("\n te uniste al juego!");
+//                }else {
+//                }
+            } //if (jugador.equals(evento.getContenido())) que solo muestre agregado con exito si es la vista que tiene que ser
             case CAMBIOTURNO -> {
                 if (!(jugador.equals(mesa.getTurno()))){
                     vista.mostrarMensaje("es el turno de: " + evento.getContenido());

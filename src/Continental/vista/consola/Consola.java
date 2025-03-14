@@ -197,8 +197,8 @@ public class Consola extends JFrame implements IVista {
 
     @Override
     public void inicio(){
+        areaSalida.append("---------BIENVENIDO AL CONTINENTAL--------- \n");
         areaSalida.append("Ingrese su Nombre: ");
-        //mostrarMensaje("Ingrese su Nombre: "); NO USO EL MOSTRARMENSAJE PORQUE HACE UN SALTO EN LINEA Y QUEDA FEO
         setPanelInput(TipoPanel.ENTRADA);
         inputField.setText("");
     }

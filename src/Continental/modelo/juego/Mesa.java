@@ -230,7 +230,7 @@ public class Mesa implements IObservable {
         turno.robar(this.mazo);
         this.yaRobo = true;
         interrumpir();
-        notificar(new Evento(TipoEvento.ACTUALIZARCARTAS));
+        //notificar(new Evento(TipoEvento.ACTUALIZARCARTAS));
     }
 
     private void interrumpir(){
